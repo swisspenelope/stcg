@@ -1,5 +1,4 @@
 <?php
-
 require_once 'header.php';
 
 /************ CALL GET ALL LOCS AND LANGS **************** DO SESSION CHECK *************/
