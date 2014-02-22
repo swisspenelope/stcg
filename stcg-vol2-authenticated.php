@@ -10,7 +10,7 @@ else
 {
 	/*************************** call get member with this unique email ************************/
 	/****************************************************************************************/
-
+echo "test";
 	$connectionObject = connect();
 	$member = getThisMemberByEmail($connectionObject, $_SESSION['user']);
 	//var_dump($member);
