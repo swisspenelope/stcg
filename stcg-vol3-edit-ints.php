@@ -1,7 +1,4 @@
 <?php
-/*
-session handing added for security 2014.01.29
-*/
 
 include_once 'header.php';
 
