@@ -32,6 +32,7 @@ session_start();
 
 <!-- ESSENTIAL JQWIDGETS LIBRARIES -->
 <script type="text/javascript" src="widgets/jqwidgets/jqxcore.js"></script>
+<script type="text/javascript" src="widgets/jqwidgets/jqxcheckbox.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqxdragdrop.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqxbuttons.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqxlistbox.js"></script>
