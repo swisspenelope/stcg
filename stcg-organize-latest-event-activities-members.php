@@ -52,10 +52,11 @@ $(document).ready(function ()
     var columns = [
 	  	            { text: 'First Name', datafield: 'name_first', width: 90 },
 	  	            { text: 'Last Name', datafield: 'name_last', width: 110 },
-					{ text: 'Email', datafield: 'email', width: 180 },
-					{ text: 'Phone', datafield: 'phone', width: 110 },
-					{ text: 'Code', datafield: 'activity_short_code', width: 50 },
-	  	            { text: 'Activity', datafield: 'activity_name', width: 250 }
+                            { text: 'Email', datafield: 'email', width: 180 },
+                            { text: 'Phone', datafield: 'phone', width: 110 },
+                            { text: 'Code', datafield: 'activity_short_code', width: 50 },
+	  	            { text: 'Activity', datafield: 'activity_name', width: 250 },
+                            { text: 'Chosen', datafield: 'chosen', columntype: 'checkbox', width: 67 },
 	  	         ];
 
 //INITIALIZE GRID 1
