@@ -55,8 +55,7 @@ $(document).ready(function ()
                             { text: 'Email', datafield: 'email', width: 180 },
                             { text: 'Phone', datafield: 'phone', width: 110 },
                             { text: 'Code', datafield: 'activity_short_code', width: 50 },
-	  	            { text: 'Activity', datafield: 'activity_name', width: 250 },
-                            { text: 'Chosen', datafield: 'chosen', columntype: 'checkbox', width: 67 },
+	  	            { text: 'Activity', datafield: 'activity_name', width: 250 }
 	  	         ];
 
 //INITIALIZE GRID 1
@@ -67,7 +66,8 @@ $(document).ready(function ()
 	        source: adapter1,
 	        sortable: true,
 	        theme: 'classic',
-	        selectionmode: 'singlerow',
+	        selectionmode: 'checkbox',
+                altrows: true,
 	        columns: columns,
 
 //rendering for drag-drop functionality
@@ -75,10 +75,11 @@ $(document).ready(function ()
 	        {
                 // select all grid cells.
                 var gridCells = $('#jqxgrid1').find('.jqx-grid-cell');
-                if ($('#jqxgrid1').jqxGrid('groups').length > 0)
+  /*              if ($('#jqxgrid1').jqxGrid('groups').length > 0)
                 {
                     gridCells = $('#jqxgrid1').find('.jqx-grid-group-cell');
-                }
+                }*/
+        
                 // initialize the jqxDragDrop plug-in. Set its drop target to the second Grid.
                 gridCells.jqxDragDrop(
                 {
