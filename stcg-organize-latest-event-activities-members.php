@@ -322,7 +322,9 @@ function updaterows(currentActId, rowdata){
 
 			<td style="vertical-align: top;"><!-- FIRST COLUMN OF OUTER TABLE -->
 			<div><b>&nbsp;List of all Signups to all Activities&nbsp;</b><br /><br /></div>
-			<!-- START GRID 1 DIV --><DIV style="FLOAT: LEFT;" id = "jqxgrid1"></DIV><!-- END GRID 1 DIV -->
+			<!-- START GRID 1 DIV -->
+                        <DIV style="FLOAT: LEFT;" id ="jqxgrid1"></DIV>
+                        <!-- END GRID 1 DIV -->
 			<br /><br />
 			<input style='margin-top: 10px;' type="button" value="Export to Excel" id='excelExport' />
 			</td><!-- END FIRST COLUMN OF OUTER TABLE -->
