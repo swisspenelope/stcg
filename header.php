@@ -24,7 +24,6 @@ session_start();
 <link rel="stylesheet" type="text/css" href="css/form.css" /></link>
 <link rel="stylesheet" type="text/css" href="css/themes/blue/style.css" /></link>
 
-<!-- script src="scripts/custom.js" type="text/javascript" charset="utf-8"></script -->
 <script src="scripts/jquery-ui-1.10.3/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="scripts/ajaxrequest.js" type="text/javascript"  charset="utf-8"></script>
 <script src="utils.js" type="text/javascript" charset="utf-8"></script>
