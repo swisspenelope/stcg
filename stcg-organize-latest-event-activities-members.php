@@ -1,5 +1,5 @@
 <?php
-include_once 'header.php';
+require_once 'header.php';
 
 /*********************** CALL GET LATEST EVENT TO GET EVENT ID **********************/
 /*************************************************************************************/
@@ -75,10 +75,10 @@ $(document).ready(function ()
 	        {
                 // select all grid cells.
                 var gridCells = $('#jqxgrid1').find('.jqx-grid-cell');
-  /*              if ($('#jqxgrid1').jqxGrid('groups').length > 0)
+                if ($('#jqxgrid1').jqxGrid('groups').length > 0)
                 {
                     gridCells = $('#jqxgrid1').find('.jqx-grid-group-cell');
-                }*/
+                }
         
                 // initialize the jqxDragDrop plug-in. Set its drop target to the second Grid.
                 gridCells.jqxDragDrop(
@@ -322,9 +322,9 @@ function updaterows(currentActId, rowdata){
 
 			<td style="vertical-align: top;"><!-- FIRST COLUMN OF OUTER TABLE -->
 			<div><b>&nbsp;List of all Signups to all Activities&nbsp;</b><br /><br /></div>
-			<!-- START GRID 1 DIV --><DIV style="FLOAT: LEFT;" id = jqxgrid1></DIV><!-- END GRID 1 DIV -->
+			<!-- START GRID 1 DIV --><DIV style="FLOAT: LEFT;" id = "jqxgrid1"></DIV><!-- END GRID 1 DIV -->
 			<br /><br />
-			<input style='margin-top: 10px;' type="button" value="Export to Excel" id='excelExport' /></input>
+			<input style='margin-top: 10px;' type="button" value="Export to Excel" id='excelExport' />
 			</td><!-- END FIRST COLUMN OF OUTER TABLE -->
 			<td width="20px"><!-- dummy column --></td>
 			<td style="vertical-align: top;"><!-- SECOND COLUMN OF OUTER TABLE -->
@@ -338,7 +338,7 @@ function updaterows(currentActId, rowdata){
 					Then, drag a Signup from the list on the left into the grid below.<br/>
 					(Click <b>Save</b> before selecting a new Activity!)
 					<br/><br/>
-					<!-- START GRID 2 DIV --><DIV style="FLOAT: LEFT; " id = jqxgrid2></DIV><!-- END GRID 2 DIV -->
+					<!-- START GRID 2 DIV --><DIV style="FLOAT: LEFT;" id = "jqxgrid2"></DIV><!-- END GRID 2 DIV -->
 					<div style="margin-top: 10px; float: left;"><BUTTON NAME="SUBMIT" ID ="submit" TYPE="SUBMIT" VALUE="Save">Save</BUTTON></DIV>
 					<div style="margin-top: 10px; float: right;"><input id="deleterowbutton" type="button" value="Delete Selected Signup" /></input></DIV>
 			</td><!-- END SECOND COLUMN OF OUTER TABLE -->
