@@ -43,6 +43,7 @@ session_start();
 <script type="text/javascript" src="widgets/jqwidgets/jqxgrid.selection.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqxgrid.sort.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqxmenu.js"></script>
+<script type="text/javascript" src="widgets/jqwidgets/jqxpanel.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqxgrid.grouping.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqxgrid.columnsresize.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqxgrid.edit.js"></script>
