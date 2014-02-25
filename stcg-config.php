@@ -20,8 +20,8 @@ define('VIEW_FOOTER',   DIR_BASE . 'footer.php');
 define('HTML_CHARSET',  'utf8');
 
 define('ENV_DEV', 'localhost');
-//define('ENV_PROD', 'servethecitygeneva.ch');
-define('ENV_PROD', 'hacksrus.biz/stcg/signup');
+define('ENV_PROD', 'servethecitygeneva.ch');
+//define('ENV_PROD', 'hacksrus.biz/stcg/signup');
 
 
 //DB
@@ -31,9 +31,9 @@ if ($_SERVER['HTTP_HOST'] == ENV_DEV)
     define('DB_CHARSET', 'utf8');
     define('DB_USERNAME',   'root');
     define('DB_PWD',        '1f1te111');
-    define('DB_NAME',       'stcgopt');
+    define('DB_NAME',       'stcg');
 
-    define('SESSION_DOMAIN','localhost');
+    define('SESSION_DOMAIN','localhost/stcg');
     define('SESSION_PATH','/');
 
     define('EMAIL_ORG', 'swisspenelope@gmail.com');
@@ -44,7 +44,7 @@ else
     define('DB_CHARSET', 'utf8');
     define('DB_USERNAME',  'adminstcg');
     define('DB_PWD',       '1f1te111');
-    define('DB_NAME',      'hacksrusbiz');
+    define('DB_NAME',      'servethecitygenevach1');
 
     define('SESSION_DOMAIN','www.servethecitygeneva.ch/stcg/site');
     define('SESSION_PATH','/');
