@@ -126,28 +126,28 @@ $(document).ready(function ()
                     feedback.html(table);
                 });//end drag start
 
-                gridCells.off('dragEnd');
-                gridCells.on('dragEnd', function (event)
-                {
-                        var value = $(this).jqxDragDrop('data');
-                        var position = $.jqx.position(event.args);
-                        var pageX = position.left;
-                        var pageY = position.top;
-                        var $destination = $("#jqxgrid2");
-                        var targetX = $destination.offset().left;
-                        var targetY = $destination.offset().top;
-                        var width = $destination.width();
-                        var height = $destination.height();
+                    gridCells.off('dragEnd');
+                    gridCells.on('dragEnd', function (event)
+                    {
+                            var value = $(this).jqxDragDrop('data');
+                            var position = $.jqx.position(event.args);
+                            var pageX = position.left;
+                            var pageY = position.top;
+                            var $destination = $("#jqxgrid2");
+                            var targetX = $destination.offset().left;
+                            var targetY = $destination.offset().top;
+                            var width = $destination.width();
+                            var height = $destination.height();
 
-                        // fill the grid if the user dropped the dragged item over it.
-                        if (pageX >= targetX && pageX <= targetX + width)
-                        {
-                            if (pageY >= targetY && pageY <= targetY + height)
+                            // fill the grid if the user dropped the dragged item over it.
+                            if (pageX >= targetX && pageX <= targetX + width)
                             {
-                                $destination.jqxGrid('addrow', null, value);
-                            }
-                        }//end if
-                });//end drag end
+                                if (pageY >= targetY && pageY <= targetY + height)
+                                {
+                                    $destination.jqxGrid('addrow', null, value);
+                                }
+                            }//end if
+                    });//end drag end
 	        }//end rendered function
        });//end grid 1
 
@@ -323,7 +323,7 @@ function updaterows(currentActId, rowdata){
 			<td style="vertical-align: top;"><!-- FIRST COLUMN OF OUTER TABLE -->
 			<div><b>&nbsp;List of all Signups to all Activities&nbsp;</b><br /><br /></div>
 			<!-- START GRID 1 DIV -->
-                        <DIV style="FLOAT: LEFT;" id ="jqxgrid1"></DIV>
+                        <div id ="jqxgrid1"></div><!--style="FLOAT: LEFT;" -->
                         <!-- END GRID 1 DIV -->
 			<br /><br />
 			<input style='margin-top: 10px;' type="button" value="Export to Excel" id='excelExport' />
