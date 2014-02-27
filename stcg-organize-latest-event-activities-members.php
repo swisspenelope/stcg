@@ -59,7 +59,7 @@ $(document).ready(function ()
 	  	         ];
 
 //INITIALIZE GRID 1
-	    $("#jqxgrid1").jqxGrid(
+	    $("#grid1").jqxGrid(
 	    {
 	    	width: 620,
 	        height: 450,
@@ -74,10 +74,10 @@ $(document).ready(function ()
 	        rendered: function ()
 	        {
                 // select all grid cells.
-                var gridCells = $('#jqxgrid1').find('.jqx-grid-cell');
-                if ($('#jqxgrid1').jqxGrid('groups').length > 0)
+                var gridCells = $('#grid1').find('.jqx-grid-cell');
+                if ($('#grid1').jqxGrid('groups').length > 0)
                 {
-                    gridCells = $('#jqxgrid1').find('.jqx-grid-group-cell');
+                    gridCells = $('#grid1').find('.jqx-grid-group-cell');
                 }
         
                 // initialize the jqxDragDrop plug-in. Set its drop target to the second Grid.
@@ -97,12 +97,12 @@ $(document).ready(function ()
                 gridCells.on('dragStart', function (event)
                 {
                     var position = $.jqx.position(event.args);
-                    var cell = $("#jqxgrid1").jqxGrid('getcellatposition', position.left, position.top);
+                    var cell = $("#grid1").jqxGrid('getcellatposition', position.left, position.top);
 
-                    $(this).jqxDragDrop('data', $("#jqxgrid1").jqxGrid('getrowdata', cell.row));
-                    //var value = $('#jqxgrid1').jqxGrid('getcellvaluebyid', id1, "activity_short_code");
+                    $(this).jqxDragDrop('data', $("#grid1").jqxGrid('getrowdata', cell.row));
+                    //var value = $('#grid1').jqxGrid('getcellvaluebyid', id1, "activity_short_code");
 
-                    var groupslength = $('#jqxgrid1').jqxGrid('groups').length;
+                    var groupslength = $('#grid1').jqxGrid('groups').length;
 
                     // update feedback's display value.
 
@@ -158,7 +158,7 @@ $(document).ready(function ()
 
 		$("#excelExport").click(function()
 		{
-			$("#jqxgrid1").jqxGrid('exportdata', 'xls', 'jqxGrid');
+			$("#grid1").jqxGrid('exportdata', 'xls', 'jqxGrid');
 		});
 
 var currentActId=-1;
@@ -188,43 +188,43 @@ var updatingCheckState = false;
     var adapter2 = new $.jqx.dataAdapter(data2);
 
 //INITIALIZE GRID 2
-		$("#jqxgrid2").jqxGrid(
+		$("#grid2").jqxGrid(
 		{
-			width: 600,
-	        height: 200,
-	        source: adapter2,
-	        sortable: true,
-			selectionmode: 'singlerow',
-	        theme: 'classic',
-	        keyboardnavigation: false,
+                    width: 600,
+                    height: 200,
+                    source: adapter2,
+                    sortable: true,
+                    selectionmode: 'singlerow',
+                    theme: 'classic',
+                    keyboardnavigation: false,
 
 	        columns: [
-       	  	            { text: 'First Name', datafield: 'name_first', width: 90 },
-       	  	            { text: 'Last Name', datafield: 'name_last', width: 130 },
-						{ text: 'Email', datafield: 'email', width: 220 },
-						{ text: 'Phone', datafield: 'phone', width: 110 },
-       	  	            { text: 'Code', datafield: 'activity_short_code', width: 50 }
+                { text: 'First Name', datafield: 'name_first', width: 90 },
+                { text: 'Last Name', datafield: 'name_last', width: 130 },
+                { text: 'Email', datafield: 'email', width: 220 },
+                { text: 'Phone', datafield: 'phone', width: 110 },
+                { text: 'Code', datafield: 'activity_short_code', width: 50 }
 		       	  	 ]
 		});//end grid 2
 
 //EVENT HANDLERS
-		$('#jqxgrid2').on('rowselect', function (event)
+		$('#grid2').on('rowselect', function (event)
 		{
 ///////DO NOT DELETE! IT'S THE ONLY COMBO THAT WORKS!!!/////////////
-var row = $("#jqxgrid2").jqxGrid('getrowdata', event.args.rowindex);
+var row = $("#grid2").jqxGrid('getrowdata', event.args.rowindex);
 			//alert(row.id);//returns member id
 		});
 
 //SOURCE THE DROP-DOWN LIST OF ACTIVITY SHORT CODES
         var actListData =
 	    {
-        		datatype: "json",
+        	datatype: "json",
     	        datafields:
-        	    [
-        			{ name: 'activity_short_code'},
-        			{ name: 'capacity'},
-        			{ name: 'activity_id'},
-        			{ name: 'project_leader'}
+                [
+                    { name: 'activity_short_code'},
+                    { name: 'capacity'},
+                    { name: 'activity_id'},
+                    { name: 'project_leader'}
             	],
     	        url: "stcg-json-responses.php?fct=getJSONAllSCsAtEvent&eventId=<?php echo $_SESSION['eventId'] ?>",
     	        async: false
@@ -261,25 +261,24 @@ var row = $("#jqxgrid2").jqxGrid('getrowdata', event.args.rowindex);
             $("#jqxActList").on('change', function (event)
             {
                  rebindSelectedMembersGrid(adapter2,data2);
-        	});
+            });
 
     	    $("#submit").jqxButton(
     	    	{ theme: 'classic' }
     	    );
 
-           	$("#submit").on('click', function (event)
+           $("#submit").on('click', function (event)
             {
-           		var item = $("#jqxActList").jqxDropDownList('getSelectedItem');
-				updaterows(item.value, $('#jqxgrid2').jqxGrid('getrows'));
-
-        	 });//end submit click
+                var item = $("#jqxActList").jqxDropDownList('getSelectedItem');
+                updaterows(item.value, $('#grid2').jqxGrid('getrows'));
+            });//end submit click
 
     	    $("#deleterowbutton").bind('click', function () {
-    	        var selectedrowindex = $("#jqxgrid2").jqxGrid('getselectedrowindex');
-    	        var rowscount = $("#jqxgrid2").jqxGrid('getdatainformation').rowscount;
+    	        var selectedrowindex = $("#grid2").jqxGrid('getselectedrowindex');
+    	        var rowscount = $("#grid2").jqxGrid('getdatainformation').rowscount;
     	        if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
-    	            var id = $("#jqxgrid2").jqxGrid('getrowid', selectedrowindex);
-    	            $("#jqxgrid2").jqxGrid('deleterow', id);
+    	            var id = $("#grid2").jqxGrid('getrowid', selectedrowindex);
+    	            $("#grid2").jqxGrid('deleterow', id);
     	        }
     	    });
 
@@ -316,40 +315,41 @@ function updaterows(currentActId, rowdata){
 <BODY>
 <div id="content">
 <H2>Organize</H2>
-	<H3>Volunteers signed up for Event ID #<?php echo $event['id'] . ",&nbsp;&nbsp;&nbsp;" . $event['name']; ?></H3>
-	<table style="width: 70%">
-		<tr><!-- ONLY ROW OF OUTER TABLE -->
-
-			<td style="vertical-align: top;"><!-- FIRST COLUMN OF OUTER TABLE -->
-			<div><b>&nbsp;List of all Signups to all Activities&nbsp;</b><br /><br /></div>
-			<!-- START GRID 1 DIV -->
-                        <div id ="jqxgrid1"></div><!--style="FLOAT: LEFT;" -->
-                        <!-- END GRID 1 DIV -->
-			<br /><br />
-			<input style='margin-top: 10px;' type="button" value="Export to Excel" id='excelExport' />
-			</td><!-- END FIRST COLUMN OF OUTER TABLE -->
-			<td width="20px"><!-- dummy column --></td>
-			<td style="vertical-align: top;"><!-- SECOND COLUMN OF OUTER TABLE -->
-			<!--fieldset style = "border: solid #AAAAAA 1px; padding: 20px; padding-top: 20px;">
-			<legend>&nbsp;<b>Choose an Activity, then drag a Signup into it&nbsp;</b></legend-->
-
-				<div><b>&nbsp;Assign one or more Signups to each Activity&nbsp;</b><br /><br /></div>
-				<div>First, select one Activity from the list of Short Codes below<br /><br /></div>
-					<!-- START ACT LIST DIV --><div style="float: LEFT;" id="jqxActList"></div><!-- END ACT LIST DIV -->
-					<br/><br/>
-					Then, drag a Signup from the list on the left into the grid below.<br/>
-					(Click <b>Save</b> before selecting a new Activity!)
-					<br/><br/>
-					<!-- START GRID 2 DIV --><DIV style="FLOAT: LEFT;" id = "jqxgrid2"></DIV><!-- END GRID 2 DIV -->
-					<div style="margin-top: 10px; float: left;"><BUTTON NAME="SUBMIT" ID ="submit" TYPE="SUBMIT" VALUE="Save">Save</BUTTON></DIV>
-					<div style="margin-top: 10px; float: right;"><input id="deleterowbutton" type="button" value="Delete Selected Signup" /></input></DIV>
-			</td><!-- END SECOND COLUMN OF OUTER TABLE -->
-			<!-- THIRD COLUMN OF OUTER TABLE -->
-			<!--div><b>&nbsp;Final list&nbsp;</b><br /><br /></div-->
-			<!-- START GRID 3 DIV --><!--DIV id = "jqxgrid3" style="FLOAT: LEFT;" --></DIV><!-- END GRID 3 DIV -->
-			<!-- END THIRD COLUMN OF OUTER TABLE -->
-		</tr><!-- END ONLY ROW OF OUTER TABLE -->
-	</table>
+    <H3>Volunteers signed up for Event ID #
+        <?php echo $event['id'] . ",&nbsp;&nbsp;&nbsp;" . $event['name']; ?></H3>
+    <table style="width: 70%">
+        <tr><!-- ONLY ROW OF OUTER TABLE -->
+            <td style="vertical-align: top;"><!-- FIRST COLUMN OF OUTER TABLE -->
+            <div><b>&nbsp;List of all Signups to all Activities&nbsp;</b><br /><br /></div>
+            <!-- START GRID 1 DIV -->
+            <div id="grid1" style="FLOAT: LEFT;"></div>
+            <!-- END GRID 1 DIV -->
+            <br /><br />
+            <input style='margin-top: 10px;' type="button" value="Export to Excel" id='excelExport' />
+            </td><!-- END FIRST COLUMN OF OUTER TABLE -->
+            <td width="20px"><!-- dummy column --></td>
+            <td style="vertical-align: top;"><!-- SECOND COLUMN OF OUTER TABLE -->
+            <!--fieldset style = "border: solid #AAAAAA 1px; padding: 20px; padding-top: 20px;">
+            <legend>&nbsp;<b>Choose an Activity, then drag a Signup into it&nbsp;</b></legend-->
+            <div><b>&nbsp;Assign one or more Signups to each Activity&nbsp;</b><br /><br /></div>
+            <div>First, select one Activity from the list of Short Codes below<br /><br /></div>
+            <!-- START ACT LIST DIV -->
+            <div style="float: LEFT;" id="jqxActList"></div>
+            <!-- END ACT LIST DIV -->
+            <br/><br/>
+            Then, drag a Signup from the list on the left into the grid below.<br/>
+            (Click <b>Save</b> before selecting a new Activity!)
+            <br/><br/>
+            <!-- START GRID 2 DIV -->
+            <DIV id ="grid2" style="FLOAT: LEFT;"></DIV>
+            <!-- END GRID 2 DIV -->
+            <div style="margin-top: 10px; float: left;">
+                <BUTTON NAME="SUBMIT" ID ="submit" TYPE="SUBMIT" VALUE="Save">Save</BUTTON></div>
+            <div style="margin-top: 10px; float: right;">
+                <input id="deleterowbutton" type="button" value="Delete Selected Signup" /></DIV>
+                </td>
+            </tr><!-- END ONLY ROW OF OUTER TABLE -->
+    </table>
 </div>
 <?php
 	include_once 'footer.php';
