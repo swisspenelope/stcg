@@ -57,6 +57,12 @@ if (isset($_GET['fct']))
 		$result = updateSelectedMembersAtActivity($connectionObject, $_GET['actId'], $_GET['memId']);
 		echo $result;
 	}
+        
+        if ($_GET['fct'] == 'updateSelectedFlagforEvent')
+        {
+		$result = updateSelectedFlagforEvent($connectionObject, $_GET['actId'], $_GET['rowId']);
+		echo $result;
+	}
 
 	if ($_GET['fct'] == 'insertNewMemberDetails')
 	{
