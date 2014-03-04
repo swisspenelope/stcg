@@ -38,7 +38,8 @@ $(document).ready(function ()
 		{ name: 'phone'},
 		{ name: 'activity_short_code'},
 		{ name: 'activity_name'},
-		{ name: 'capacity'}
+		{ name: 'capacity'},
+        { name: 'selected'}
 			        ],
         url: 'stcg-json-responses.php?fct=getJSONMembersAtEvent&eventId=<?php echo $_SESSION['eventId'] ?>',
         sortcolumn: 'name_last',
@@ -52,34 +53,32 @@ $(document).ready(function ()
     var columns = [
 	  	            { text: 'First Name', datafield: 'name_first', width: 90 },
 	  	            { text: 'Last Name', datafield: 'name_last', width: 110 },
-                            { text: 'Email', datafield: 'email', width: 180 },
-                            { text: 'Phone', datafield: 'phone', width: 110 },
-                            { text: 'Code', datafield: 'activity_short_code', width: 50 },
-	  	            { text: 'Activity', datafield: 'activity_name', width: 250 }
+					{ text: 'Email', datafield: 'email', width: 180 },
+					{ text: 'Phone', datafield: 'phone', width: 110 },
+					{ text: 'Code', datafield: 'activity_short_code', width: 50 },
+	  	            { text: 'Selected', datafield: 'selected', width: 30 }
 	  	         ];
 
 //INITIALIZE GRID 1
-	    $("#grid1").jqxGrid(
+	    $("#jqxgrid1").jqxGrid(
 	    {
 	    	width: 620,
 	        height: 450,
 	        source: adapter1,
 	        sortable: true,
 	        theme: 'classic',
-	        selectionmode: 'checkbox',
-                altrows: true,
+	        selectionmode: 'singlerow',
 	        columns: columns,
 
 //rendering for drag-drop functionality
 	        rendered: function ()
 	        {
                 // select all grid cells.
-                var gridCells = $('#grid1').find('.jqx-grid-cell');
-                if ($('#grid1').jqxGrid('groups').length > 0)
+                var gridCells = $('#jqxgrid1').find('.jqx-grid-cell');
+                if ($('#jqxgrid1').jqxGrid('groups').length > 0)
                 {
-                    gridCells = $('#grid1').find('.jqx-grid-group-cell');
+                    gridCells = $('#jqxgrid1').find('.jqx-grid-group-cell');
                 }
-        
                 // initialize the jqxDragDrop plug-in. Set its drop target to the second Grid.
                 gridCells.jqxDragDrop(
                 {
@@ -97,12 +96,12 @@ $(document).ready(function ()
                 gridCells.on('dragStart', function (event)
                 {
                     var position = $.jqx.position(event.args);
-                    var cell = $("#grid1").jqxGrid('getcellatposition', position.left, position.top);
+                    var cell = $("#jqxgrid1").jqxGrid('getcellatposition', position.left, position.top);
 
-                    $(this).jqxDragDrop('data', $("#grid1").jqxGrid('getrowdata', cell.row));
-                    //var value = $('#grid1').jqxGrid('getcellvaluebyid', id1, "activity_short_code");
+                    $(this).jqxDragDrop('data', $("#jqxgrid1").jqxGrid('getrowdata', cell.row));
+                    //var value = $('#jqxgrid1').jqxGrid('getcellvaluebyid', id1, "activity_short_code");
 
-                    var groupslength = $('#grid1').jqxGrid('groups').length;
+                    var groupslength = $('#jqxgrid1').jqxGrid('groups').length;
 
                     // update feedback's display value.
 
@@ -158,7 +157,7 @@ $(document).ready(function ()
 
 		$("#excelExport").click(function()
 		{
-			$("#grid1").jqxGrid('exportdata', 'xls', 'jqxGrid');
+			$("#jqxgrid1").jqxGrid('exportdata', 'xls', 'jqxGrid');
 		});
 
 var currentActId=-1;
@@ -188,7 +187,7 @@ var updatingCheckState = false;
     var adapter2 = new $.jqx.dataAdapter(data2);
 
 //INITIALIZE GRID 2
-		$("#grid2").jqxGrid(
+		$("#jqxgrid2").jqxGrid(
 		{
                     width: 600,
                     height: 200,
@@ -199,6 +198,7 @@ var updatingCheckState = false;
                     keyboardnavigation: false,
 
 	        columns: [
+				{ text: '#', datafield: 'id', width: 40 },
                 { text: 'First Name', datafield: 'name_first', width: 90 },
                 { text: 'Last Name', datafield: 'name_last', width: 130 },
                 { text: 'Email', datafield: 'email', width: 220 },
@@ -208,10 +208,10 @@ var updatingCheckState = false;
 		});//end grid 2
 
 //EVENT HANDLERS
-		$('#grid2').on('rowselect', function (event)
+		$('#jqxgrid2').on('rowselect', function (event)
 		{
 ///////DO NOT DELETE! IT'S THE ONLY COMBO THAT WORKS!!!/////////////
-var row = $("#grid2").jqxGrid('getrowdata', event.args.rowindex);
+var row = $("#jqxgrid2").jqxGrid('getrowdata', event.args.rowindex);
 			//alert(row.id);//returns member id
 		});
 
@@ -270,15 +270,15 @@ var row = $("#grid2").jqxGrid('getrowdata', event.args.rowindex);
            $("#submit").on('click', function (event)
             {
                 var item = $("#jqxActList").jqxDropDownList('getSelectedItem');
-                updaterows(item.value, $('#grid2').jqxGrid('getrows'));
+                updaterows(item.value, $('#jqxgrid2').jqxGrid('getrows'));
             });//end submit click
 
     	    $("#deleterowbutton").bind('click', function () {
-    	        var selectedrowindex = $("#grid2").jqxGrid('getselectedrowindex');
-    	        var rowscount = $("#grid2").jqxGrid('getdatainformation').rowscount;
+    	        var selectedrowindex = $("#jqxgrid2").jqxGrid('getselectedrowindex');
+    	        var rowscount = $("#jqxgrid2").jqxGrid('getdatainformation').rowscount;
     	        if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
-    	            var id = $("#grid2").jqxGrid('getrowid', selectedrowindex);
-    	            $("#grid2").jqxGrid('deleterow', id);
+    	            var id = $("#jqxgrid2").jqxGrid('getrowid', selectedrowindex);
+    	            $("#jqxgrid2").jqxGrid('deleterow', id);
     	        }
     	    });
 
@@ -301,13 +301,26 @@ function updaterows(currentActId, rowdata){
 
     	for(var i=0;i<rowdata.length;i++)
         {
-    		data = data + "&memId[]=" + rowdata[i]['id'];
+    		data = data + "&memId[]=" + rowdata[i]['id'];//actId=112&memId=4
     	}
         $.ajax({
             dataType: 'json',
             url: 'stcg-json-responses.php?fct=updateSelectedMembersAtActivity',
             data: data,
-    		cache: false
+            cache: false
+    	});
+		
+		var lastRow = rowdata.length-1;
+		var rowId = $('#jqxgrid2').jqxGrid('getrowid', lastRow);
+
+		var data2 = "actId=" + currentActId + "&rowId=" + rowId;
+
+        //put code here that will update the first grid.
+        $.ajax({
+            dataType: 'json',
+            url: 'stcg-json-responses.php?fct=updateSelectedFlagforEvent',
+            data: data2,
+            cache: false
     	});
 }
 </script>
@@ -322,7 +335,9 @@ function updaterows(currentActId, rowdata){
             <td style="vertical-align: top;"><!-- FIRST COLUMN OF OUTER TABLE -->
             <div><b>&nbsp;List of all Signups to all Activities&nbsp;</b><br /><br /></div>
             <!-- START GRID 1 DIV -->
-            <div id="grid1" style="FLOAT: LEFT;"></div>
+            <div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
+            <div id="jqxgrid1" style="FLOAT: LEFT;"></div>
+            </div>
             <!-- END GRID 1 DIV -->
             <br /><br />
             <input style='margin-top: 10px;' type="button" value="Export to Excel" id='excelExport' />
@@ -341,7 +356,7 @@ function updaterows(currentActId, rowdata){
             (Click <b>Save</b> before selecting a new Activity!)
             <br/><br/>
             <!-- START GRID 2 DIV -->
-            <DIV id ="grid2" style="FLOAT: LEFT;"></DIV>
+            <DIV id ="jqxgrid2" style="FLOAT: LEFT;"></DIV>
             <!-- END GRID 2 DIV -->
             <div style="margin-top: 10px; float: left;">
                 <BUTTON NAME="SUBMIT" ID ="submit" TYPE="SUBMIT" VALUE="Save">Save</BUTTON></div>
