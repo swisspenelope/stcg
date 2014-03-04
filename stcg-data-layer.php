@@ -535,14 +535,15 @@ return $rows;
 //USED ON DATABASE ADMIN PAGE ORGANIZE-LATEST-EVENT-ACTIVITES-MEMBERS.PHP
 // LIST-EVENT-ACTIVITIES-WITH-MEMBERS VIA JSON-RESPONSES
 //FROM `member`, `member_activity`, `activity`
+///////////BE AWARE OF HACK FOR NEW TABLE COLUMN!////////////////
 function getJSONMembersAtEvent($PDOdbObject, $eventId)
 {
 	try
 	{
-		$membersAtEventSQL = "SELECT member.id, member.name_last, member.name_first, member.email, member.phone, activity.event_id, activity.activity_id, activity.activity_short_code, activity.activity_name, activity.capacity, activity.project_leader
-			FROM `member`, `member_activity_selected`, `activity`
-			WHERE member.id = member_activity_selected.member_id
-			AND activity.activity_id = member_activity_selected.activity_id
+		$membersAtEventSQL = "SELECT member.id, member.name_last, member.name_first, member.email, member.phone, activity.event_id, activity.activity_id, activity.activity_short_code, activity.activity_name, activity.capacity, activity.project_leader, member_activity_temp.selected
+			FROM `member`, `member_activity_temp`, `activity`
+			WHERE member.id = member_activity_temp.member_id
+			AND activity.activity_id = member_activity_temp.activity_id
 			AND activity.event_id = ?";
 
 		$get = $PDOdbObject->prepare($membersAtEventSQL);//prepare also returns PDO object
@@ -560,6 +561,7 @@ function getJSONMembersAtEvent($PDOdbObject, $eventId)
 		$get->bindColumn('activity_name', $actName);
 		$get->bindColumn('capacity', $capName);
 		$get->bindColumn('project_leader', $pl);
+		$get->bindColumn('selected', $sel);
 
 		$rows = $get->fetchAll(PDO::FETCH_ASSOC);
 		$json=json_encode($rows);
@@ -1166,6 +1168,42 @@ function updateSelectedMembersAtActivity($PDOdbObject, $newActivityId, $selected
 			return false;
 		}
 }
+/*
+function updateSelectedFlagforEvent($PDOdbObject, $activityId, $memberId)
+{
+    try
+    {    
+       $setFlag = $PDOdbObject->prepare("UPDATE `member_activity_temp` SET selected=1 WHERE `activity_id`=:activity_id AND `member_id`=:member_id" );
+
+		$setFlag->bindParam(':activity_id', $activityId, PDO::PARAM_INT);
+		$setFlag->bindParam(':member_id', $memberId, PDO::PARAM_INT);
+        return true;
+    }
+    catch (PDOException $e) 
+    {
+        echo $e->getMessage();
+	return false;
+    }
+}
+*/
+
+function updateSelectedFlagforEvent($PDOdbObject, $activityId, $memberId)
+{
+    try
+    {    
+       $setFlagSQL = "UPDATE `member_activity_temp` SET `selected`=1 WHERE `activity_id`=:activity_id AND `member_id`=:member_id";
+	   $setFlag = $PDOdbObject->prepare($setFlagSQL);
+	   $setFlag->bindParam(':activity_id', $activityId, PDO::PARAM_INT);
+	   $setFlag->bindParam(':member_id', $memberId, PDO::PARAM_INT);
+	   $setFlag->execute();
+	   $affected_rows = $setFlag->rowCount();
+    }
+    catch (PDOException $e) 
+    {
+        echo $e->getMessage();
+    }
+	return $affected_rows;
+}
 
 //UNUSED
 function updateThisPwd($PDOdbObject, $pass, $id)
@@ -1173,7 +1211,7 @@ function updateThisPwd($PDOdbObject, $pass, $id)
 	try
 	{
 		$updateSQL = "UPDATE `member` SET `password` = '$pass' WHERE `id` = '$id'";
-		echo $id . "    " . $pass . "\n";
+		//echo $id . "    " . $pass . "\n";
 		$updatePwd = $PDOdbObject->prepare($updateSQL);
 		$updatePwd->execute();
 	}
