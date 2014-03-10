@@ -1126,77 +1126,77 @@ function updateActivities($PDOdbObject, $activity_name,$activity_desc,$activity_
 
 ///USED ON EVENT-ORGANIZE PAGE
 //THIS IS A DELETE FOLLOWED BY AN INSERT
-function updateSelectedMembersAtActivity($PDOdbObject, $newActivityId, $selectedMembers)
+function updateAllSelectedMembersAtActivity($PDOdbObject, $changedActId, $selectedMembers)
 {
-		try
-		{
-			//begin transaction
-			$PDOdbObject->beginTransaction();
+    try
+    {
+        //begin transaction
+        $PDOdbObject->beginTransaction();
 
-			//delete selected members at event-activity
-			$delMemAct = $PDOdbObject->prepare(  "DELETE FROM `member_activity_selected` WHERE `activity_id` = :act_id" );
+        //delete all members at event-activity
+        $delMemAct = $PDOdbObject->prepare(  "DELETE FROM `member_activity_selected` WHERE `activity_id` = :act_id" );
 
 
-			$delMemAct->bindValue(":act_id", $newActivityId, PDO::PARAM_INT);
+        $delMemAct->bindValue(":act_id", $changedActId, PDO::PARAM_INT);
 
-			$delMemAct->execute();
+        $delMemAct->execute();
 
-			//insert new members
-			if ($selectedMembers > 0)
-			{
-				$insMemAct = $PDOdbObject->prepare("INSERT INTO `member_activity_selected` (`member_id`,`activity_id`) VALUES (:member_id, :act_id)" );
+        //insert new members
+        if ($selectedMembers > 0)
+        {
+            $insMemAct = $PDOdbObject->prepare("INSERT INTO `member_activity_selected` (`member_id`,`activity_id`) VALUES (:member_id, :act_id)" );
 
-				$insMemAct->bindParam(':act_id', $newActivityId, PDO::PARAM_INT);
-				$insMemAct->bindParam(':member_id', $memberId, PDO::PARAM_INT);
+            $insMemAct->bindParam(':act_id', $changedActId, PDO::PARAM_INT);
+            $insMemAct->bindParam(':member_id', $memberId, PDO::PARAM_INT);
 
-				foreach($selectedMembers as $memberId)
-				{
-					//$insMemAct->bindValue(":member_id", $memberId, PDO::PARAM_INT);
-					$insMemAct->execute();
-				}
-			}
-			//commit
-			$PDOdbObject->commit();
-			return true;
-		}
-		catch (PDOException $e)
-		{
-			echo "There was a problem - rolling back this transaction.";
-			//rollback transaction
-			$PDOdbObject->rollBack();
-			echo $e->getMessage();
-			return false;
-		}
+            foreach($selectedMembers as $memberId)
+            {
+                //$insMemAct->bindValue(":member_id", $memberId, PDO::PARAM_INT);
+                $insMemAct->execute();
+            }
+        }
+        //commit
+        $PDOdbObject->commit();
+        return true;
+    }
+    catch (PDOException $e)
+    {
+        echo "There was a problem - rolling back this transaction.";
+        //rollback transaction
+        $PDOdbObject->rollBack();
+        echo $e->getMessage();
+        return false;
+    }
 }
-/*
+
 function updateSelectedFlagforEvent($PDOdbObject, $activityId, $memberId)
 {
     try
     {    
-       $setFlag = $PDOdbObject->prepare("UPDATE `member_activity_temp` SET selected=1 WHERE `activity_id`=:activity_id AND `member_id`=:member_id" );
-
-		$setFlag->bindParam(':activity_id', $activityId, PDO::PARAM_INT);
-		$setFlag->bindParam(':member_id', $memberId, PDO::PARAM_INT);
-        return true;
+        $setFlagSQL = "UPDATE `member_activity_temp` SET `selected`=1 WHERE `activity_id`=:activity_id AND `member_id`=:member_id";
+        $setFlag = $PDOdbObject->prepare($setFlagSQL);
+        $setFlag->bindParam(':activity_id', $activityId, PDO::PARAM_INT);
+        $setFlag->bindParam(':member_id', $memberId, PDO::PARAM_INT);
+        $setFlag->execute();
+        $affected_rows = $setFlag->rowCount();
     }
     catch (PDOException $e) 
     {
         echo $e->getMessage();
-	return false;
     }
+	return $affected_rows;
 }
-*/
 
-function updateSelectedFlagforEvent($PDOdbObject, $activityId, $memberId)
+function updateDeletedFlagforEvent($PDOdbObject, $activityId, $memberId)
 {
     try
     {    
-       $setFlagSQL = "UPDATE `member_activity_temp` SET `selected`=1 WHERE `activity_id`=:activity_id AND `member_id`=:member_id";
-	   $setFlag = $PDOdbObject->prepare($setFlagSQL);
-	   $setFlag->bindParam(':activity_id', $activityId, PDO::PARAM_INT);
-	   $setFlag->bindParam(':member_id', $memberId, PDO::PARAM_INT);
-	   $setFlag->execute();
-	   $affected_rows = $setFlag->rowCount();
+        $setFlagSQL = "UPDATE `member_activity_temp` SET `selected`=0 WHERE `activity_id`=:activity_id AND `member_id`=:member_id";
+        $setFlag = $PDOdbObject->prepare($setFlagSQL);
+        $setFlag->bindParam(':activity_id', $activityId, PDO::PARAM_INT);
+        $setFlag->bindParam(':member_id', $memberId, PDO::PARAM_INT);
+        $setFlag->execute();
+        $affected_rows = $setFlag->rowCount();
     }
     catch (PDOException $e) 
     {
@@ -1386,7 +1386,26 @@ function insertMemberActivities($PDOdbObject, $memberId, $acts, $commentsIn)
 			$affected_rows = $insert->rowCount();
 			return $affected_rows;
 }
+function deleteMemberFromActivitySelected($PDOdbObject, $memId, $actId)
+{
+    try
+    {
+        $deleteMemSQL = " delete from `member_activity_selected` where `member_id` = :mem and `activity_id` = :act ";
+        $deleteMem = $PDOdbObject->prepare($deleteMemSQL);
+        $deleteMem->execute(array(
+			        ':mem' => $memId,
+			        ':act' => $actId
+				));
+        $affected_rows = $deleteMem->rowCount();
+	return $affected_rows;
+    } 
+    catch(PDOException $e) 
+    {
+        echo "There was a problem deleting this member from this activity.";
+        echo $e->getMessage();
+    }
 
+}
 function addMemberToActivitySelected($PDOdbObject, $memId, $actId)
 {
 	try
