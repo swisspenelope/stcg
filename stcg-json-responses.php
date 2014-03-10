@@ -52,15 +52,21 @@ if (isset($_GET['fct']))
 		}
 	}
 	//call update members in member_activity_selected table, for one activity - used in Activity grid on right
-	if ($_GET['fct'] == 'updateSelectedMembersAtActivity')
+	if ($_GET['fct'] == 'updateAllSelectedMembersAtActivity')
 	{
-		$result = updateSelectedMembersAtActivity($connectionObject, $_GET['actId'], $_GET['memId']);
+		$result = updateAllSelectedMembersAtActivity($connectionObject, $_GET['actId'], $_GET['memId']);
 		echo $result;
 	}
         
         if ($_GET['fct'] == 'updateSelectedFlagforEvent')
         {
 		$result = updateSelectedFlagforEvent($connectionObject, $_GET['actId'], $_GET['rowId']);
+		echo $result;
+	}
+        
+        if ($_GET['fct'] == 'updateDeletedFlagforEvent')
+        {
+		$result = updateDeletedFlagforEvent($connectionObject, $_GET['actId'], $_GET['rowId']);
 		echo $result;
 	}
 
@@ -200,9 +206,15 @@ if (isset($_GET['fct']))
 
 	if ($_GET['fct'] == 'addMemberToActivitySelected')
 	{
-		$result = addMemberToActivitySelected($connectionObject, $_GET['memId'], $_GET['actId']);
-		echo $result;
+            $result = addMemberToActivitySelected($connectionObject, $_GET['memId'], $_GET['actId']);
+            echo $result;
 	}
+        
+        if ($_GET['fct'] == 'deleteMemberFromActivitySelected')
+        {
+            $result = deleteMemberFromActivitySelected($connectionObject, $_GET['memId'], $_GET['actId']);
+	    echo $result;
+        }
 
 	if ($_GET['fct'] == 'getSongs')
 	{
