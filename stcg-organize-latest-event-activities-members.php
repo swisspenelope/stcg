@@ -23,6 +23,13 @@ if (empty($event)) {
 <script type="text/javascript">
     $(document).ready(function()
     {
+        //CONTINUE REPLACING 1 WITH CHECKMARK
+  /*      var checkmark = Image: 'widgets/jqwidgets/images/checkmark-16.png';
+        var sel = $('#jqxgrid1').jqxGrid('getcolumn', 'selected');
+        if (sel == 1))
+        {
+             sel = checkmark;
+        }*/
         var deletedFromActivity = false;
 //SOURCE THE GRID CONTAINING ALL SIGNUPS:
         var data1 =
@@ -54,9 +61,9 @@ if (empty($event)) {
             {text: 'Email', datafield: 'email', width: 180},
             {text: 'Phone', datafield: 'phone', width: 110},
             {text: 'Code', datafield: 'activity_short_code', width: 50},
-            {text: 'Selected', datafield: 'selected', width: 30}
+            {text: 'Selected', columntype: 'checkbox', datafield: 'selected', width: 30}
         ];
-
+        
 //INITIALIZE GRID 1
         $("#jqxgrid1").jqxGrid(
                 {
