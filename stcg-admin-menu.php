@@ -1,40 +1,30 @@
 <?php
-require_once 'stcg-config.php';
-header("Content-Type: text/html;charset=utf-8");
-
-require_once 'stcg-config.php';
-require_once 'stcg-utilities.php';
-require_once 'stcg-data-layer.php';
-
+require_once 'header.php';
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="en">
-<head>
-    <title>Administration Menu</title>   
+<title>Administration Menu</title>   
 </head>
 <body>
-<h2>The Admin Menu - Administrator of STCG only</h2>
-<TABLE>
-<TR>
-<TD><H3><a href="stcg-list-all-members.php">List of all signed-up members to date (with sorting of columns)</a></H3>
-</TD>
-</TR>
-<TR>
-<TD><H3><a href="stcg-organize-latest-event-activities-members.php">Organize signups</a></H3>
-</TD>
-</TR>
-<TR>
-<TD><H3><a href="stcg-input-member-to-find-history.php">View the Event/Activity history of one member</a></H3></TD>
-</TR>
-<TR>
-<TD><H3><a href="stcg-input-interest-to-find-members.php">See all members sharing a particular interest</a></H3></TD>
-</TR>
-<TR>
-<TD><H3><a href="stcg-input-language-to-find-members.php">See all members that speak a chosen language</a></H3></TD>
-</TR>
-<TR>
-<TD><H3><a href="stcg-list-event-activities-with-members.php">See all members at all Events - from the start of STCG</a></H3></TD>
-</TR>
-</TABLE>
+<h2> Admin Menu - Administrator of STCG only</h2>
+<form>
+    <div>  
+        <fieldset>
+        <p><a href="stcg-list-members.php">List of  signed-up members to  (with sorting of columns)</a></p>         
+        <p><a href="stcg-list-event-activities-with-members.php">List of  members at  Events, from  start of STCG</a></p>
+	<p><a href="stcg-input-member-to-find-history.php">View  Event/Activity history of one  member</a></p>
+	</fieldset>
+    </div>
+    <br /><br />
+    <div>
+        <fieldset>
+        <p><a href="stcg-input-interest-to-find-members.php">Find all members sharing a particular interest</a></p>
+        <p><a href="stcg-input-language-to-find-members.php">Find all  members  speaking a chosen language</a></p>
+        </fieldset>
+    </div>
+    <br /><br />
+    <div>
+        <fieldset>
+	<p><a href="stcg-organize-latest-event-activities-members.php">Organize signups at latest Event</a></p>
+        </fieldset> 
+    </div>
+</form>
 </body>
-</html>
