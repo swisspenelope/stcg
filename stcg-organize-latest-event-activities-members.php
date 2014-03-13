@@ -11,8 +11,8 @@ $event = getLatestEvent($connectionObject);
 if (empty($event)) {
     echo "There were either no members or this Event ID # is wrong.";
 } else {
-    $_SESSION['eventId'] = 10;
-    //$_SESSION['eventId'] = $event['id'];
+    //$_SESSION['eventId'] = 9;
+    $_SESSION['eventId'] = $event['id'];
     $_SESSION['eventName'] = $event['name'];
     $_SESSION['eventDate'] = $event['date'];
 }
@@ -21,15 +21,8 @@ if (empty($event)) {
 <TITLE>Organize Members at all Activities</TITLE>
 
 <script type="text/javascript">
-    $(document).ready(function()
-    {
-        //CONTINUE REPLACING 1 WITH CHECKMARK
-  /*      var checkmark = Image: 'widgets/jqwidgets/images/checkmark-16.png';
-        var sel = $('#jqxgrid1').jqxGrid('getcolumn', 'selected');
-        if (sel == 1))
-        {
-             sel = checkmark;
-        }*/
+$(document).ready(function()
+{
         var deletedFromActivity = false;
 //SOURCE THE GRID CONTAINING ALL SIGNUPS:
         var data1 =
@@ -56,18 +49,19 @@ if (empty($event)) {
         var adapter1 = new $.jqx.dataAdapter(data1);
 
         var columns = [
+            {text: '#', datafield: 'id', width: 50},
             {text: 'First Name', datafield: 'name_first', width: 90},
-            {text: 'Last Name', datafield: 'name_last', width: 110},
+            {text: 'Last Name', datafield: 'name_last', width: 130},
             {text: 'Email', datafield: 'email', width: 180},
             {text: 'Phone', datafield: 'phone', width: 110},
             {text: 'Code', datafield: 'activity_short_code', width: 50},
             {text: 'Selected', columntype: 'checkbox', datafield: 'selected', width: 30}
         ];
-        
+
 //INITIALIZE GRID 1
         $("#jqxgrid1").jqxGrid(
                 {
-                    width: 620,
+                    width: 660,
                     height: 450,
                     source: adapter1,
                     sortable: true,
@@ -190,7 +184,7 @@ if (empty($event)) {
 //INITIALIZE GRID 2
         $("#jqxgrid2").jqxGrid(
                 {
-                    width: 600,
+                    width: 650,
                     height: 200,
                     source: adapter2,
                     sortable: true,
@@ -280,22 +274,22 @@ if (empty($event)) {
             if (selectedrowindex >= 0 && selectedrowindex < rowscount)
             {
                 var id = $("#jqxgrid2").jqxGrid('getrowid', selectedrowindex);
-         //remove line from view in grid 2
+                //remove line from view in grid 2
                 $("#jqxgrid2").jqxGrid('deleterow', id);
                 var data = "actId=" + currentActId + "&rowId=" + id;//id is the member Id
-         //remove record from member_activity_selected
+                //remove record from member_activity_selected
                 $.ajax({
-                dataType: 'json',
-                url: 'stcg-json-responses.php?fct=deleteMemberFromActivitySelected',
-                data: data,
-                cache: false
+                    dataType: 'json',
+                    url: 'stcg-json-responses.php?fct=deleteMemberFromActivitySelected',
+                    data: data,
+                    cache: false
                 });
-                
+
                 $.ajax({
-                dataType: 'json',
-                url: 'stcg-json-responses.php?fct=updateDeletedFlagforEvent',
-                data: data,
-                cache: false
+                    dataType: 'json',
+                    url: 'stcg-json-responses.php?fct=updateDeletedFlagforEvent',
+                    data: data,
+                    cache: false
                 });
                 $("#jqxgrid1").jqxGrid('updatebounddata');
                 deletedFromActivity = true;
@@ -313,46 +307,46 @@ if (empty($event)) {
             saveMembersToActivity(item.value, $('#jqxgrid2').jqxGrid('getrows'));
         });//end submit click
 
-    });//end document ready
+ });//end document ready
 
     ////////// SAVE CHANGES TO DB /////////////////////////
     //$('#jqxgrid2').jqxGrid('getrows') corresponds to rowsInThisGrid, below
     //rowsInThisGrid is a 2-dimensional assoc. array
-function saveMembersToActivity(currentActId, rowsInThisGrid)
-{
-    var data = "actId=" + currentActId;
-    //alert(rowsInThisGrid.length);
-    for (var i = 0; i < rowsInThisGrid.length; i++)
-    //build array of member ids and put into 'data'
+    function saveMembersToActivity(currentActId, rowsInThisGrid)
     {
-        data = data + "&memId[]=" + rowsInThisGrid[i]['id'];//actId=112&memId=4
+        var data = "actId=" + currentActId;
+        //alert(rowsInThisGrid.length);
+        for (var i = 0; i < rowsInThisGrid.length; i++)
+                //build array of member ids and put into 'data'
+                {
+                    data = data + "&memId[]=" + rowsInThisGrid[i]['id'];//actId=112&memId=4
+                }
+        //save to database in table member_activity_selected
+        $.ajax({
+            dataType: 'json',
+            url: 'stcg-json-responses.php?fct=updateAllSelectedMembersAtActivity',
+            data: data,
+            cache: false
+        });
+        updateFlagInGrid1(currentActId, rowsInThisGrid);
     }
-    //save to database in table member_activity_selected
-    $.ajax({
-        dataType: 'json',
-        url: 'stcg-json-responses.php?fct=updateAllSelectedMembersAtActivity',
-        data: data,
-        cache: false
-    });
-    updateFlagInGrid1(currentActId, rowsInThisGrid);
-}
-function updateFlagInGrid1(currentActId, rowsInThisGrid)
-{        
-    var lastRow = rowsInThisGrid.length - 1;
-    var rowId = $('#jqxgrid2').jqxGrid('getrowid', lastRow);
+    function updateFlagInGrid1(currentActId, rowsInThisGrid)
+    {
+        var lastRow = rowsInThisGrid.length - 1;
+        var rowId = $('#jqxgrid2').jqxGrid('getrowid', lastRow);
 
-    var dataSet = "actId=" + currentActId + "&rowId=" + rowId;//rowId is the member Id
-    
-    $("#jqxgrid1").jqxGrid('updatebounddata');
-    $.ajax({
-        dataType: 'json',
-        url: 'stcg-json-responses.php?fct=updateSelectedFlagforEvent',
-        data: dataSet,
-        cache: false
-    });
-     //refresh the updated first grid
-     $("#jqxgrid1").jqxGrid('updatebounddata');
-}
+        var dataSet = "actId=" + currentActId + "&rowId=" + rowId;//rowId is the member Id
+
+        $("#jqxgrid1").jqxGrid('updatebounddata');
+        $.ajax({
+            dataType: 'json',
+            url: 'stcg-json-responses.php?fct=updateSelectedFlagforEvent',
+            data: dataSet,
+            cache: false
+        });
+        //refresh the updated first grid
+        $("#jqxgrid1").jqxGrid('updatebounddata');
+    }
 
 </script>
 </HEAD>
