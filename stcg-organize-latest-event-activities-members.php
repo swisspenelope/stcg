@@ -55,7 +55,7 @@ $(document).ready(function()
             {text: 'Email', datafield: 'email', width: 180},
             {text: 'Phone', datafield: 'phone', width: 110},
             {text: 'Code', datafield: 'activity_short_code', width: 50},
-            {text: 'Selected', columntype: 'checkbox', datafield: 'selected', width: 30}
+            {text: ' ', columntype: 'checkbox', datafield: 'selected', width: 30}
         ];
 
 //INITIALIZE GRID 1
