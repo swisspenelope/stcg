@@ -33,14 +33,30 @@ if (isset($_GET['fct']))
 			echo $result;
 		}
 	}
+        
+        if ($_GET['fct'] == 'updateSelectedActivity')
+        {
+            if (isset($_GET['actId']))
+            {
+                $result = updateSelectedActivity($connectionObject, $_GET['activity_id'], $_GET['activity_name'], $_GET['activity_desc'], $_GET['activity_short_code'], $_GET['capacity'], $_GET['date'], $_GET['project_leader'], $_GET['open']);
+                echo $result;
+            }
+        }
+        
+        if ($_GET['fct'] == 'insertNewActivityToNewEvent')
+        {
+            $result = insertNewActivityToNewEvent($connectionObject, $_GET['activity_name'], $_GET['activity_desc'], $_GET['activity_short_code'], $_GET['capacity'], $_GET['date'], $_GET['project_leader'], $_GET['open'], $_GET['evId']);
+                echo $result;
+        }
+           
 	//call get activity short-codes of all activities in the event - used in drop-down list on right
 	if ($_GET['fct'] == 'getJSONAllSCsAtEvent')
 	{
-		if (isset($_GET['eventId']))
-		{
-			$result = getJSONAllSCsAtEvent($connectionObject, $_GET['eventId']);
-			echo $result;
-		}
+            if (isset($_GET['eventId']))
+            {
+                    $result = getJSONAllSCsAtEvent($connectionObject, $_GET['eventId']);
+                    echo $result;
+            }
 	}
 	//call get members in member_activity_selected table, for one activity - used in Activity grid on right
 	if ($_GET['fct'] == 'getJSONSelectedMembersAtActivity')
