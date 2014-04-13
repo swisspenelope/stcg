@@ -781,7 +781,6 @@ function getJSONAllActivitiesAtEvent($PDOdbObject, $eventId)
 		$get->bindColumn('activity_short_code', $sc);
 		$get->bindColumn('event_id', $eventId);
 		$get->bindColumn('capacity', $cap);
-		$get->bindColumn('day_of_week', $dow);
 		$get->bindColumn('date', $date);
 
 		$rows = $get->fetchAll(PDO::FETCH_ASSOC);
@@ -1080,13 +1079,13 @@ function updateThisMemberInterests($PDOdbObject, $memberId, $interests)
 }
 
 //UNUSED
-function updateActivities($PDOdbObject, $activity_name,$activity_desc,$activity_short_code,$event_id,$capacity,$day_of_week,$date,$open=1)
+function updateActivities($PDOdbObject, $activity_name,$activity_desc,$activity_short_code,$event_id,$capacity, $date,$open=1)
 {
 	try
 	{
 		$updateActSQL = $PDOdbObject->prepare("UPDATE `activity`
 								SET `activity_name`=?,`activity_desc`=?,`activity_short_code`=?,`event_id`=?,
-								`capacity`=?,`day_of_week`=?,`date`=?,`open`=?
+								`capacity`=?, `date`=?,`open`=?
 								WHERE 'activity_id'=?");
 		$update = $PDOdbObject->prepare($updateActSQL);
 		$update->execute();
@@ -1096,7 +1095,6 @@ function updateActivities($PDOdbObject, $activity_name,$activity_desc,$activity_
 		$update->bindValue(":activity_short_code", $activity_short_code, PDO::PARAM_STR);
 		$update->bindValue(":event_id", $event_id, PDO::PARAM_INT);
 		$update->bindValue(":capacity", $capacity, PDO::PARAM_INT);
-		$update->bindValue(":day_of_week", $day_of_week, PDO::PARAM_INT);
 		$update->bindValue(":date", $date, PDO::PARAM_STR);
 		$update->bindValue(":open", $open, PDO::PARAM_INT);
 
@@ -1202,7 +1200,7 @@ function updateDeletedFlagforEvent($PDOdbObject, $activityId, $memberId)
     {
         echo $e->getMessage();
     }
-	return $affected_rows;
+    return $affected_rows;
 }
 
 //UNUSED
@@ -1226,15 +1224,42 @@ function updatePwd($PDOdbObject, $pass, $id)
 {
 	try
 	{
-		$updateSQL = "UPDATE `member` SET `password` = '$pass' WHERE `id` = '$id' ";
-		//echo $id . "    " . $pass . "\n";
-		$updatePwd = $PDOdbObject->prepare($updateSQL);
-		$updatePwd->execute();
+            $updateSQL = "UPDATE `member` SET `password` = '$pass' WHERE `id` = '$id' ";
+            //echo $id . "    " . $pass . "\n";
+            $updatePwd = $PDOdbObject->prepare($updateSQL);
+            $updatePwd->execute();
 	}
 	catch (PDOException $e)
 	{
-		echo $e->getMessage();
+            echo $e->getMessage();
 	}
+}
+
+function updateSelectedActivity($PDOdbObject, $actId, $actName, $actDesc, $actCode, $cap, $date, $pl, $open)
+{// 
+    try
+    {
+        $updateActSQL = "UPDATE `activity` SET `activity_name` = ?, `activity_desc` = ?, `activity_short_code` = ?, `capacity` = ?, `date` = ?, `project_leader` = ?, `open` = ? WHERE `activity_id` = ? ";
+        $updateAct = $PDOdbObject->prepare($updateActSQL);
+
+        $updateAct->execute(array(
+				$actName,
+				$actDesc,
+				$actCode,
+				$cap,
+				$date,
+				$pl,
+				$open,
+				$actId
+		));
+        
+        $affected_rows = $updateAct->rowCount();
+    }
+    catch (PDOException $e)
+    {	
+        echo $e->getMessage();
+    }
+    return $affected_rows;
 }
 
 /************************************************ INSERTS *********************************************************************************/
@@ -1362,6 +1387,33 @@ function insertThisMemberInterests($PDOdbObject, $memberId, $interests)
 			echo $e->getMessage();
 		}
 	}
+}
+//////////// ADD THE EQUIV FUNCTIONS TO ADD NEW EVENT AND JSON FILES
+function insertNewActivityToNewEvent($PDOdbObject, $actName, $actDesc, $actCode, $cap, $date, $pl, $open, $eventId)
+{
+    try
+    {
+        $insertActivitySQL = "INSERT INTO activity (`activity_name`,`activity_desc`,`activity_short_code`,`capacity`,`date`,`project_leader`,`open`,`event_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $insertAct=$PDOdbObject->prepare($insertActivitySQL);
+        $insertAct->execute(array
+        (
+            $actName,
+            $actDesc,
+            $actCode,
+            $cap,
+            $date,
+            $pl,
+            1,
+            $eventId
+        ));
+        $affected_rows = $insertAct->rowCount();
+	return $affected_rows;  
+    }
+    catch (PDOException $e) 
+    {
+        echo "There was a problem inserting this activity.";
+	echo $e->getMessage();
+    }
 }
 
 //UNUSED
