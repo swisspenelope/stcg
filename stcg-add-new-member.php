@@ -143,8 +143,8 @@ function checkForm(form)
 
 	  if (!$("input[name='interests']:checked").val() > 0)
 	  {
-			alert("Please select at least one area of interest.");
-			isOk = false;
+                alert("Please select at least one area of interest.");
+                isOk = false;
 		return;
 	  }
 	//isRecaptchaOK();
