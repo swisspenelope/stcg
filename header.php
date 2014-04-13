@@ -44,6 +44,10 @@ session_start();
 <script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxgrid.grouping.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxgrid.columnsresize.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxgrid.edit.js"></script>
+
+<script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxinput.js"></script>
+<script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxnumberinput.js"></script>
+
 <script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxgrid.columnsreorder.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxgrid.pager.js"></script>
 
