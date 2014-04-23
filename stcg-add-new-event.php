@@ -1,8 +1,11 @@
 <?php
 require_once 'header.php';
 
+$connectionObject = connect();
 //TODO first create the Event
-$_SESSION['eventId'] = 10;
+$event = getLatestEvent($connectionObject);
+$_SESSION['eventId'] = $event['id'];
+//echo $_SESSION['eventId'];
 ?>
 <head> 
 <title>
@@ -41,15 +44,31 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
         sortcolumn: 'activity_id',//note rowid order follows activity_id!
         sortdirection: 'asc',
         async: false,
-
+        
+////////////// THIS IS THE UPDATE / ADD ROW THAT HAS TO BE CALLED /////////
         updaterow: function (rowid, rowdata, commit) 
         {
-            var data = "activity_id=" + rowdata.activity_id + "&activity_name=" + rowdata.activity_name + "&activity_desc=" + rowdata.activity_desc + "&activity_short_code=" + rowdata.activity_short_code + "&capacity=" + rowdata.capacity + "&date=" + rowdata.date + "&project_leader=" + rowdata.project_leader + "&open=" + rowdata.open;
-
-            if ($("#activity_id").val()!== "")
+            //alert("at start of update function, here is rowid value [" + rowid + "]");
+            if ($("#activity_id").val() === "" || $("#activity_id").val() === null)
+            //if (rowid === "" || rowid === null)
             {
-                //update table activity
-             
+                var insData = "activity_name=" + rowdata.activity_name + "&activity_desc=" + rowdata.activity_desc + "&activity_short_code=" + rowdata.activity_short_code + "&capacity=" + rowdata.capacity + "&date=" + rowdata.date + "&project_leader=" + rowdata.project_leader + "&open=" + 1 + "&evId=" + thisEvent;  
+                //rowdata.open
+               
+                $.ajax({
+                dataType: 'json',    
+                url: 'stcg-json-responses.php?fct=insertNewActivityToNewEvent',
+                data: insData,
+                cache: false,
+                success: myCallback,
+                error: myCallbackError
+                    }); 
+            } 
+            else
+            {
+//update table activity
+                var data = "activity_id=" + rowdata.activity_id + "&activity_name=" + rowdata.activity_name + "&activity_desc=" + rowdata.activity_desc + "&activity_short_code=" + rowdata.activity_short_code + "&capacity=" + rowdata.capacity + "&date=" + rowdata.date + "&project_leader=" + rowdata.project_leader + "&open=" + rowdata.open;            
+                
                 $.ajax({
                    dataType: 'json',
                    url: 'stcg-json-responses.php?fct=updateSelectedActivity&actId=' + rowdata.activity_id,
@@ -58,56 +77,13 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
                    success: myCallback,
                    error: myCallbackError
                    });
-            } 
-            else
-            {
-                var insData = "activity_name=" + rowdata.activity_name + "&activity_desc=" + rowdata.activity_desc + "&activity_short_code=" + rowdata.activity_short_code + "&capacity=" + rowdata.capacity + "&date=" + rowdata.date + "&project_leader=" + rowdata.project_leader + "&open=" + rowdata.open + "&evId=" + thisEvent;
-
-                $.ajax({
-                    dataType: 'json',    
-                    url: 'stcg-json-responses.php?fct=insertNewActivityToNewEvent',
-                    data: insData,
-                    cache: false,
-                    success: myCallback,
-                    error: myCallbackError
-                    }); 
             }
         }
     };//end data source
-
-    // initialize the input fields.
-    $("#activity_id").jqxInput({ theme: 'classic' });
-    $("#activity_name").jqxInput({ theme: 'classic' });
-    $("#activity_desc").jqxInput({ theme: 'classic' });
-    $("#activity_short_code").jqxInput({ theme: 'classic' });
-    $("#capacity").jqxInput({ theme: 'classic' });
-    $("#date").jqxInput({ theme: 'classic' });
-    $("#project_leader").jqxInput({ theme: 'classic' });
-    $("#open").jqxInput({ theme: 'classic' });
-
-    $("#activity_id").width(200);
-    $("#activity_id").height(40);
-        
-    $("#activity_name").width(400);
-    $("#activity_name").height(40);
-    $("#activity_desc").width(600);
-    $("#activity_desc").height(40);
-    $("#activity_short_code").width(200);
-    $("#activity_short_code").height(40);
-    $("#capacity").width(200);
-    $("#capacity").height(40);
-    $("#date").width(200);
-    $("#date").height(40);
-    $("#project_leader").width(200);
-    $("#project_leader").height(40);
-    $("#open").width(200);
-    $("#open").height(40);
-
+//create the dataAdapter for the Grid
     var adapter = new $.jqx.dataAdapter(data);
-
     var editrow = -1;//editrow is merely the row num of the selected row
-
-    // initialize jqxGrid
+ // initialize jqxGrid
     $("#jqxgrid").jqxGrid(
     {
         width: 1200,
@@ -132,10 +108,10 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
                 }, buttonclick: function (row) 
                 {
                // open the popup window when the user clicks a button.
-         
+                    //alert("this is the row id being called in edit click of grid construct: " + row);
                     editrow = row;
                     var offset = $("#jqxgrid").offset();
-                    $("#popupWindow").jqxWindow(
+                    $("#editWindow").jqxWindow(
                     { position: { x: parseInt(offset.left) + 60, y: parseInt(offset.top) + 60 } });
                // get the clicked row's data and initialize the input fields.
                     var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', editrow);
@@ -149,18 +125,45 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
                     $("#open").val(dataRecord.open);
 
                // show the popup window.
-                    $("#popupWindow").jqxWindow('open');
+                    $("#editWindow").jqxWindow('open');
                 }
             }
-        ]
+        ]  
     });
+// initialize the input fields.
+    $("#activity_id").jqxInput({ theme: 'classic' });
+    $("#activity_name").jqxInput({ theme: 'classic' });
+    $("#activity_desc").jqxInput({ theme: 'classic' });
+    $("#activity_short_code").jqxInput({ theme: 'classic' });
+    $("#capacity").jqxInput({ theme: 'classic' });
+    $("#date").jqxInput({ theme: 'classic' });
+    $("#project_leader").jqxInput({ theme: 'classic' });
+    //$("#open").jqxInput({ theme: 'classic' });
 
-    // initialize the popup window and buttons.
-    $("#popupWindow").jqxWindow({
-        width: 800, resizable: true, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01           
+    $("#activity_id").width(200);
+    $("#activity_id").height(40);
+        
+    $("#activity_name").width(400);
+    $("#activity_name").height(40);
+    $("#activity_desc").width(600);
+    $("#activity_desc").height(40);
+    $("#activity_short_code").width(200);
+    $("#activity_short_code").height(40);
+    $("#capacity").width(200);
+    $("#capacity").height(40);
+    $("#date").width(200);
+    $("#date").height(40);
+    $("#project_leader").width(200);
+    $("#project_leader").height(40);
+/*    $("#open").width(200);
+    $("#open").height(40);*/
+
+ // initialize the popup window and buttons.
+    $("#editWindow").jqxWindow({
+        width: 800, resizable: true, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01      
     });
-    $("#popupWindow").on('open', function () {
-        $("#activity_name").jqxInput('selectAll');
+    $("#editWindow").on('open', function () {
+        //$("#activity_name").jqxInput('selectAll');
     });
 
 //button initializers
@@ -169,73 +172,85 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
     $("#Save").jqxButton({ theme: 'classic' });
 
 //button handlers  
-        // create new row.
+// create new row.
         $("#NewRow").bind('click', function () 
         {
-            var id = $("#jqxgrid").jqxGrid('getdatainformation').rowscount;
-            $("#jqxgrid").jqxGrid('addrow', id, {});
-        });
-
-        // update the edited row when the user clicks the 'Save' button.
+            $('#jqxgrid').jqxGrid('sortby', 'activity_id', 'asc');    
+            
+            var allRows = $("#jqxgrid").jqxGrid('getrows').length;
+            var newRow = allRows+1;
+            $("#jqxgrid").jqxGrid('addrow', newRow, {});
+            setInputFormToEmpty();
+            editrow = newRow;
+            //alert("this new row number is " + editrow);//10
+        // show the popup window.
+            $("#editWindow").jqxWindow('open');
+         });
+ 
+// update the edited row when the user clicks the 'Save' button.
         // note that 'Save' is inside popup window
         $("#Save").click(function () 
         {  
-            if (editrow >= 0) 
-            {
-		validateRowContents();
-                var row = 
-                {   
-                    activity_id: $("#activity_id").val(), 
-                    activity_name: $("#activity_name").val(), 
-                    activity_desc: $("#activity_desc").val(), 
-                    activity_short_code: $("#activity_short_code").val(), 
-                    capacity: $("#capacity").val(), 
-                    date: $("#date").val(), 
-                    project_leader: $("#project_leader").val(), 
-                    open: $("#open").val(),
-                    event_id: thisEvent
-                };
-
-                var rowID = $('#jqxgrid').jqxGrid('getrowid', editrow);
-                $('#jqxgrid').jqxGrid('updaterow', rowID, row);//row is an object with all row values in it
-                
-                $("#popupWindow").jqxWindow('hide');
+            //alert ("on save button, click row num is " + editrow);    
+        if (editrow >= 0) //10
+        {
+            validateRowContents();
+            var row = 
+            {   
+                activity_id: $("#activity_id").val(), 
+                activity_name: $("#activity_name").val(), 
+                activity_desc: $("#activity_desc").val(), 
+                activity_short_code: $("#activity_short_code").val(), 
+                capacity: $("#capacity").val(), 
+                date: $("#date").val(), 
+                project_leader: $("#project_leader").val(),
+                event_id: thisEvent
+            };
+//open: $("#open").val(),
+            //var rowID = $('#jqxgrid').jqxGrid('getrowid', editrow);
+            
+//call the famous update row function
+            //$('#jqxgrid').jqxGrid('updaterow', rowID, row);//row is an object with all row values in it
+            $('#jqxgrid').jqxGrid('updaterow', editrow, row);//row is an object with all row values in it
+            $("#editWindow").jqxWindow('close');
         }
     });
+    //alert("just before end of page loading code, number of rows in grid so far is " + $("#jqxgrid").jqxGrid('getrows').length);    
 });
 
 function validateRowContents()
 {
-    var isOk = true;   
-    if ($("#activity_name").val() == "")
+    var isOk = true;  
+
+    if ($("#activity_name").val() === "")
     {
         isOk = false;
         alert("Please enter a short name for this Activity.");
-        $("#activity_name").val().focus();
+        $("#activity_name").focus();
         return;
     }
 
-   if ($("#activity_desc").val() == "")
+   if ($("#activity_desc").val() === "")
     {
         isOk = false;
         alert("Please enter a longer description of what this Activity entails.");
-        $("#activity_desc").val().focus();
+        $("#activity_desc").focus();
         return;
     }
 
-    if ($("#activity_short_code").val() == "")
+    if ($("#activity_short_code").val() === "")
     {
         isOk = false;
         alert("Please enter the Activity's Short Code.");
-        $("#activity_short_code").val().focus();
+        $("#activity_short_code").focus();
         return;
     }
 
-    if ($("#date").val() == "")
+    if ($("#date").val() === "" )
     {
         isOk = false;
         alert("Please enter the Activity's start date.");
-        $("#date").val().focus();
+        $("#date").focus();
         return;
     }
 }
@@ -257,10 +272,22 @@ function myCallbackError(jqXHR, textStatus, errorThrown )
 {
      alert("Could not update this grid - " + errorThrown + ", status: " + textStatus);
 }
+
+function setInputFormToEmpty()
+{
+    $("#activity_id").val('');
+    $("#activity_name").val('');
+    $("#activity_desc").val('');
+    $("#activity_short_code").val('');
+    $("#capacity").val('');
+    $("#date").val('');
+    $("#project_leader").val('');
+    //$("#open").val('');
+}
 </script>
 </head>
 <body>
-     <p>Add Activities</p>
+     <h2>Add Activities to new Event: <?php echo $event['name'] ?></h2>
     <div style="padding: 10px; float: left;"><input type="button" id="NewRow" value="Add New Row" /></div>
     <div id='jqxWidget'>
         <div id="jqxgrid"></div>
@@ -269,7 +296,7 @@ function myCallbackError(jqXHR, textStatus, errorThrown )
             <div style="margin-top: 10px;" id="cellendeditevent"></div>
        </div>
        <!--///////////////////// POPUP WINDOW ///////////////////////////////-->
-       <div id="popupWindow">
+       <div id="editWindow">
             <div>Edit</div>
             <div style="overflow: hidden;">
                 <table>
@@ -301,12 +328,12 @@ function myCallbackError(jqXHR, textStatus, errorThrown )
                         <td align="right">Project Leader:</td>
                         <td align="left"><input id="project_leader"></td>
                     </tr>
-                    <tr>
+                    <!--tr>
                         <td align="right">Open:</td>
-                        <td align="left"><input id="open" value="1"><input type="hidden" id="event_id" value=thisEvent></td>
-                    </tr>
+                        <td align="left"><input id="open" readonly style="background-color: #e2e2e2">1</td>
+                    </tr-->
                     <tr>
-                        <td align="right"></td>
+                        <td align="right"><input type="hidden" value=thisEvent></td>
                         <td style="padding-top: 10px;" align="right">
                             <input style="margin-right: 5px;" type="button" id="Save" value="Save" />
                             <input id="Cancel" type="button" value="Cancel" />
