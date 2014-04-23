@@ -1403,7 +1403,7 @@ function insertNewActivityToNewEvent($PDOdbObject, $actName, $actDesc, $actCode,
             $cap,
             $date,
             $pl,
-            1,
+            $open,
             $eventId
         ));
         $affected_rows = $insertAct->rowCount();
@@ -1541,7 +1541,7 @@ function insertActivitiesToNewEvent($PDOdbObject, $eventId, $acts)
 
 		foreach($acts as $actId)
 		{
-			$insert->execute();
+                    $insert->execute();
 		}
 		//commit
 		$PDOdbObject->commit();
