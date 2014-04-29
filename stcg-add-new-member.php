@@ -9,6 +9,11 @@ $allLanguages = getAllLanguages($connectionObject);
 $allInterests = getAllInterestsButUnknown($connectionObject);
 
 /****************************************************************************************/
+if (!empty($_GET['acts']))
+{
+    $_SESSION['acts'] = $_GET['acts'];
+    echo is_array($_SESSION['acts']);
+}
 ?>
 <title>
 New Volunteer Signup page
@@ -18,6 +23,8 @@ var theRegion = 0;
 var theLang = 0;
 var theInts = [];
 var intString = "";
+var activities = "{" + "<?php echo $_SESSION['acts'] ?>" + "}";
+alert(activities.toString());
 
 //after a recaptcha error, it goes back to before document ready. if ints is not
 //reinitted below after document ready, ints simply adds to itself - bug
@@ -69,7 +76,7 @@ function callAjax(method, value, target)
 	{
 	    var req = new AjaxRequest();
 	    var params = "method=" + method + "&value=" + encodeURIComponent(value) + "&target=" + target;
-	    req.setMethod("POST");
+	    req.setMethod("post");
 	    req.loadXMLDoc('stcg-ajax-validation.php', params);
    }
 }
@@ -159,8 +166,8 @@ function myCallback(response)
 //ajax call returns one or more rows inserted
 	if (response > 0)
 	{
-		//alert("Thank you for your registration! / Merci de votre inscription!");
-		window.top.location="http://www.servethecitygeneva.ch/index.php?page_id=3292";
+		alert("Thank you for your registration! / Merci de votre inscription!");
+		//window.top.location="http://www.servethecitygeneva.ch/index.php?page_id=3292";
 	}
 }
 
@@ -180,182 +187,191 @@ function myCallbackError(jqXHR, textStatus, errorThrown )
 
 function insertMemberInDatabase()
 {
-    	var data = "source=" + document.getElementById('source').value + "&last=" + document.getElementById('last').value + "&first=" + document.getElementById('first').value +
+//YOU HAVE TO ADD THE ACTIVITIES IF THERE ARE ANY
+    if (activities === null || activities === undefined)
+    {
+        var data = "source=" + document.getElementById('source').value + "&last=" + document.getElementById('last').value + "&first=" + document.getElementById('first').value +
 "&email=" + document.getElementById('email').value + "&org=" + document.getElementById('org').value +
 "&pass=" + document.getElementById('pwd2').value + "&phone=" + document.getElementById('phone').value +
 "&comments=" + document.getElementById('comments').value + "&region=" + theRegion + "&lang=" + theLang + "&ints=" + intString;
-        $.ajax({
-            dataType: 'json',
-            url: 'stcg-json-responses.php?fct=insertNewMemberDetails',
-            data: data,
-    		cache: false,
-    		success: myCallback,
-    		error: myCallbackError
-    	});
+    }
+    else
+    {
+        alert("activities exist and are [" + activities + "]");
+    }
+  data += activities;     
+ /*   $.ajax({
+        dataType: 'json',
+        url: 'stcg-json-responses.php?fct=insertNewMemberDetails',
+        data: data,
+            cache: false,
+            success: myCallback,
+            error: myCallbackError
+    });*/
 }
 </script>
 </head>
-<BODY>
-<TABLE>
-	<TR>
-		<TD><H3 CLASS = "eng">Sign up with Serve The City Geneva</H3></TD>
-		<TD><H3 CLASS = "fre">Inscrivez-vous chez Serve The City Geneva</H3></TD>
-	</TR>
-	<TR>
-		<TD><P CLASS = "eng"><B>* means this information<br/>MUST be entered</B></P></TD>
-		<TD><P CLASS = "fre"><B>* signifie que cette information<br/>est OBLIGATOIRE</B></P></TD>
-	</TR>
-</TABLE>
-<INPUT TYPE="BUTTON" ID="back" VALUE="Back"></INPUT>
+<body>
+<table>
+	<tr>
+		<td><h3 class = "eng">Sign up with Serve The City Geneva</h3></td>
+		<td><h3 class = "fre">Inscrivez-vous chez Serve The City Geneva</h3></td>
+	</tr>
+	<tr>
+		<td><p class = "eng"><b>* means this information<br/>MUST be entered</b></p></td>
+		<td><p class = "fre"><b>* signifie que cette information<br/>est OBLIGATOIRE</b></p></td>
+	</tr>
+</table>
+<input type="button" id="back" value="Back">
 
 <!-- /****************************************************************************************/-->
-<FORM name= "NEWMEM" ID = "NEWMEM" METHOD="POST" ACTION="non-Ajax form handler">
-		<FIELDSET style = "border: solid black 1px; width: 92%; padding: 20px; padding-top: 20px">
-			<LEGEND>&nbsp;<SPAN CLASS = "eng"><B>Your contact details</B></SPAN>&nbsp;/&nbsp;<SPAN CLASS = "fre"><B>Vos coordonnées</B></SPAN>&nbsp;</LEGEND>
+<form name= "NEWMEM" id = "NEWMEM" method="post" action="non-Ajax form handler">
+		<fieldset style = "border: solid black 1px; width: 92%; padding: 20px; padding-top: 20px">
+			<legend>&nbsp;<span class = "eng"><b>Your contact details</b></span>&nbsp;/&nbsp;<span class = "fre"><b>Vos coordonnées</b></span>&nbsp;</legend>
 
-			<TABLE border="0">
-				<TR>
-					<TD style="width: 40%;"><SPAN CLASS="eng">How did you hear about us?</SPAN> / <SPAN CLASS="fre">Comment avez-vous découvert STCG?</SPAN></TD>
-					<TD style="width: 2%;">*</TD>
-					<TD style="width: 10%;"><TEXTAREA ID="source" NAME="source" title="Please enter a brief word about where you heard of us.  Veuillez nous dire brièvement comment vous nous avez découvert." COLS="30" ROWS="3"></TEXTAREA></TD>
-				</TR>
-				<TR>
-					<TD><SPAN CLASS = "eng">First Name</SPAN> / <SPAN CLASS = "fre">Prénom</SPAN></TD>
-					<TD>*</TD>
-					<TD><INPUT TYPE="text" title="Your first name.  Votre prénom." ID="first" NAME="first" SIZE="30" onchange="this.value = this.value.replace(/^\s+|\s+$/g, ''); valid_first.checked = this.value;">
-					<input type="checkbox" disabled name="valid_first"></TD>
-				</TR>
-				<TR>
-					<TD><SPAN CLASS = "eng">Last Name</SPAN> / <SPAN CLASS = "fre">Nom de famille</SPAN></TD>
-					<TD>*</TD>
-					<TD><INPUT TYPE="text" title="Your last name.  Votre nom de famille." ID="last" NAME="last" SIZE="30" onchange="this.value = this.value.replace(/^\s+|\s+$/g, ''); valid_last.checked = this.value;">
-					<input type="checkbox" disabled name="valid_last"></TD>
-				</TR>
-				<TR>
-					<TD><SPAN CLASS = "eng">Email</SPAN> / <SPAN CLASS = "fre">Courriel</SPAN></TD>
-					<TD>*</TD>
-					<TD><INPUT TYPE="text" title="Your email address.  Votre adresse courriel." NAME="email" id="email" SIZE="25" onchange="if(this.value != '') {callAjax('checkRegistrationEmail', this.value, this.id);}">
-					<input type="checkbox" id="valid_email" disabled name="valid_email"></input>
-					<div id="rsp_email"><!-- --></div></TD>
-				</TR>
-				<TR>
-					<TD><SPAN CLASS = "eng">Create a password</SPAN> / <SPAN CLASS = "fre">Créér un mot de passe</SPAN></TD>
-					<TD style="width: 2%;">*</TD>
-					<TD><INPUT title="Create a password.  Créér un mot de passe." TYPE="password" id="pwd1" NAME="pwd1" SIZE="25" onchange="if(this.value != '') {callAjax('checkPwd1', this.value, this.id);}">
-					<input type="checkbox" id="valid_pwd1" disabled name="valid_pwd1"></input>
-					<div id="rsp_pwd1"><!-- --></div></TD>
-				</TR>
-				<TR>
-					<TD style="width: 40%;"><SPAN CLASS = "eng">Repeat your password</SPAN> / <SPAN CLASS = "fre">Mot de passe encore</SPAN></TD>
-					<TD style="width: 2%;">*</TD>
-					<TD><INPUT title="Repeat the password you created above.  Répéter le mot de passe créé ci-dessus." type="password" id="pwd2" name="pwd2" SIZE="25" onchange="if(this.value != '') {
+			<table border="0">
+				<tr>
+					<td style="width: 40%;"><span class="eng">How did you hear about us?</span> / <span class="fre">Comment avez-vous découvert STCG?</span></td>
+					<td style="width: 2%;">*</td>
+					<td style="width: 10%;"><textarea id="source" name="source" title="Please enter a brief word about where you heard of us.  Veuillez nous dire brièvement comment vous nous avez découvert." colS="30" rows="3"></textarea></td>
+				</tr>
+				<tr>
+					<td><span class = "eng">First Name</span> / <span class = "fre">Prénom</span></td>
+					<td>*</td>
+					<td><input type="text" title="Your first name.  Votre prénom." id="first" name="first" SIZE="30" onchange="this.value = this.value.replace(/^\s+|\s+$/g, ''); valid_first.checked = this.value;">
+					<input type="checkbox" disabled name="valid_first"></td>
+				</tr>
+				<tr>
+					<td><span class = "eng">Last Name</span> / <span class = "fre">Nom de famille</span></td>
+					<td>*</td>
+					<td><input type="text" title="Your last name.  Votre nom de famille." id="last" name="last" SIZE="30" onchange="this.value = this.value.replace(/^\s+|\s+$/g, ''); valid_last.checked = this.value;">
+					<input type="checkbox" disabled name="valid_last"></td>
+				</tr>
+				<tr>
+					<td><span class = "eng">Email</span> / <span class = "fre">Courriel</span></td>
+					<td>*</td>
+					<td><input type="text" title="Your email address.  Votre adresse courriel." name="email" id="email" SIZE="25" onchange="if(this.value != '') {callAjax('checkRegistrationEmail', this.value, this.id);}">
+					<input type="checkbox" id="valid_email" disabled name="valid_email">
+					<div id="rsp_email"><!-- --></div></td>
+				</tr>
+				<tr>
+					<td><span class = "eng">Create a password</span> / <span class = "fre">Créér un mot de passe</span></td>
+					<td style="width: 2%;">*</td>
+					<td><input title="Create a password.  Créér un mot de passe." type="password" id="pwd1" name="pwd1" SIZE="25" onchange="if(this.value != '') {callAjax('checkPwd1', this.value, this.id);}">
+					<input type="checkbox" id="valid_pwd1" disabled name="valid_pwd1">
+					<div id="rsp_pwd1"><!-- --></div></td>
+				</tr>
+				<tr>
+					<td style="width: 40%;"><span class = "eng">Repeat your password</span> / <span class = "fre">Mot de passe encore</span></td>
+					<td style="width: 2%;">*</td>
+					<td><input title="Repeat the password you created above.  Répéter le mot de passe créé ci-dessus." type="password" id="pwd2" name="pwd2" SIZE="25" onchange="if(this.value != '') {
 					var pword1 = document.getElementById('pwd1').value; var newString = pword1 + ' ' + this.value; callAjax('checkPwd2', newString, this.id);}">
-					<input type="checkbox" id="valid_pwd2" disabled name="valid_pwd2"></input>
-					<div id="rsp_pwd2"><!-- --></div></TD>
-				</TR>
-				<TR>
-					<TD style="width: 40%;"><SPAN CLASS = "eng">Phone number</SPAN> / <SPAN CLASS = "fre">Numéro de tél.</SPAN></TD>
-					<TD>&nbsp;</TD>
-					<TD><INPUT TYPE="text" title="Phone number" id="phone" NAME="phone" SIZE="25"><!--onchange="if(this.value != '')
+					<input type="checkbox" id="valid_pwd2" disabled name="valid_pwd2">
+					<div id="rsp_pwd2"><!-- --></div></td>
+				</tr>
+				<tr>
+					<td style="width: 40%;"><span class = "eng">Phone number</span> / <span class = "fre">Numéro de tél.</span></td>
+					<td>&nbsp;</td>
+					<td><input type="text" title="Phone number" id="phone" name="phone" SIZE="25"><!--onchange="if(this.value != '')
 					{callAjax('checkPhone', this.value, this.id);}"-->
-					<!--input type="checkbox" id="valid_phone" disabled name="valid_phone"></input>
-					<div id="rsp_phone"><!-- --></div--></TD>
-				</TR>
-				<TR>
-					<TD style="clear: both; width: 40%;"><SPAN CLASS = "eng">Organization, Association</SPAN> / <SPAN CLASS = "fre">Organisation, Association</SPAN></TD>
-					<TD>&nbsp;</TD>
-					<TD COLSPAN = "2"><INPUT TYPE="text" id="org" NAME="org" SIZE="30"></TD>
-				</TR>
-			</TABLE>
-		</FIELDSET><br /><br />
+					<!--input type="checkbox" id="valid_phone" disabled name="valid_phone">
+					<div id="rsp_phone"><!-- --></div--></td>
+				</tr>
+				<tr>
+					<td style="clear: both; width: 40%;"><span class = "eng">Organization, Association</span> / <span class = "fre">Organisation, Association</span></td>
+					<td>&nbsp;</td>
+					<td colspan = "2"><input type="text" id="org" name="org" SIZE="30"></td>
+				</tr>
+			</table>
+		</fieldset><br /><br />
 
-		<FIELDSET style ="border: solid black 1px; width: 92%; padding: 20px; padding-top: 20px">
-			<LEGEND>&nbsp;<SPAN CLASS = "eng"><B>Your preferences</SPAN>&nbsp;/&nbsp;<SPAN CLASS = "fre">Vos préférences</B></SPAN>&nbsp;</LEGEND>
-			<TABLE border="0">
-				<TR>
-					<TD COLSPAN="3">*&nbsp;<SPAN CLASS = "eng">Where do you live?</SPAN> / <SPAN CLASS = "fre">Où habitez-vous?</SPAN></TD></TR>
-				<TR>
+		<fieldset style ="border: solid black 1px; width: 92%; padding: 20px; padding-top: 20px">
+			<legend>&nbsp;<span class = "eng"><b>Your preferences</span>&nbsp;/&nbsp;<span class = "fre">Vos préférences</b></span>&nbsp;</legend>
+			<table border="0">
+				<tr>
+					<td colspan="3">*&nbsp;<span class = "eng">Where do you live?</span> / <span class = "fre">Où habitez-vous?</span></td></tr>
+				<tr>
 				<!-- only one region allowed -->
 				<?php
 					foreach ($allLocations as $value)
 					{
 				?>
-					<TD style="width: 21%;">&nbsp;</TD>
-					<TD style="width: 2%;"><INPUT TYPE="RADIO" id ="<?php echo $value['location_id']; ?>" NAME="region" VALUE="<?php echo $value['location_id']; ?>"></TD>
-					<TD style="width: 30%;"><LABEL for="region"><?php echo $value['location_description']; ?></LABEL></TD>
-				</TR>
+					<td style="width: 21%;">&nbsp;</td>
+					<td style="width: 2%;"><input type="radio" id ="<?php echo $value['location_id']; ?>" name="region" value="<?php echo $value['location_id']; ?>"></td>
+					<td style="width: 30%;"><label for="region"><?php echo $value['location_description']; ?></label></td>
+				</tr>
 				<?php
 					}//End loop through regions
 				?>
-				<TR>
-					<TD COLSPAN="3"><BR /><BR />*&nbsp;<SPAN CLASS = "eng">Your language preference</SPAN> / <SPAN CLASS = "fre">Votre langue préférée</SPAN></TD></TR>
-				<TR>
+				<tr>
+					<td colspan="3"><br /><br />*&nbsp;<span class = "eng">Your language preference</span> / <span class = "fre">Votre langue préférée</span></td></tr>
+				<tr>
 				<!-- only one language allowed -->
 				<?php
 					foreach ($allLanguages as $value)
 					{
 				?>
-					<TD style="width: 21%;">&nbsp;</TD>
-					<TD style="width: 2%;"><INPUT TYPE="RADIO" NAME="lang" ID="<?php echo $value['id']; ?>" VALUE="<?php echo $value['id']; ?>"></TD>
-					<TD style="width: 30%;"><LABEL for="lang"><?php echo $value['lang']; ?></LABEL></TD>
-				</TR>
+					<td style="width: 21%;">&nbsp;</td>
+					<td style="width: 2%;"><input type="radio" name="lang" id="<?php echo $value['id']; ?>" value="<?php echo $value['id']; ?>"></td>
+					<td style="width: 30%;"><label for="lang"><?php echo $value['lang']; ?></label></td>
+				</tr>
 
 				<?php
 					}//End loop through languages
 				?>
-			</TABLE><BR /><BR />
+			</table><br /><br />
 
-			<DIV style="width: 100%;">*&nbsp;<SPAN CLASS = "eng">Which of the following areas are you interested in volunteering for? You can check several boxes,
-			or simply "Any of these options"</SPAN> / <SPAN CLASS = "fre">Lesquelles des options suivantes vous intéresseraient comme bénévole? Vous pouvez en sélectionner plusieurs, ou tout
-			simplement "N'importe laquelle"</SPAN></DIV>
+			<div style="width: 100%;">*&nbsp;<span class = "eng">Which of the following areas are you interested in volunteering for? You can check several boxes,
+			or simply "Any of these options"</span> / <span class = "fre">Lesquelles des options suivantes vous intéresseraient comme bénévole? Vous pouvez en sélectionner plusieurs, ou tout
+			simplement "N'importe laquelle"</span></div>
 
-			<BR />
-			<TABLE STYLE="font-size: 12px;">
+			<br />
+			<table STYLE="font-size: 12px;">
 			<!-- 1..7 interests allowed -->
 			<?php
 				foreach ($allInterests as $value)
 				{
 			?>
-				<TR>
-					<TD style="padding-left: 20px; width: 5%;">
-					<INPUT TYPE="CHECKBOX" NAME="interests" ID="interests" VALUE="<?php echo $value['interest_id']; ?>"></INPUT></TD>
-					<TD style="width: 50%;"><LABEL for="interests"><?php echo interestNumToText($value['interest_id']); ?></LABEL></TD>
-				</TR>
+				<tr>
+					<td style="padding-left: 20px; width: 5%;">
+					<input type="checkbox" name="interests" id="interests" value="<?php echo $value['interest_id']; ?>"></td>
+					<td style="width: 50%;"><label for="interests"><?php echo interestNumToText($value['interest_id']); ?></label></td>
+				</tr>
 				<?php
 				//End loop through interests
 					}
 				?>
-				<TR>
-					<TD COLSPAN="2"><font size="1"><SPAN CLASS = "eng">Everyone who signs up receives the newsletter automatically.</font></SPAN> /
-					<SPAN CLASS = "fre"><font size="1">Toute personne qui s'inscrit recevra automatiquement le bulletin.</font></SPAN></TD>
-				</TR>
-			</TABLE>
-		</FIELDSET><BR /><BR />
-		<FIELDSET style = "border: solid black 1px; width: 92%; padding: 20px; padding-top: 20px">
-			<DIV style="clear: both; width: 40%; FLOAT: LEFT;"><SPAN CLASS = "eng">Any other information? Comments? Questions?</SPAN> /
-				<SPAN CLASS = "fre">D'autres informations? Des commentaires ou questions?</SPAN>
-			</DIV>
-			<DIV><TEXTAREA ID="comments" NAME="comments" COLS="30" ROWS="3"></TEXTAREA></DIV>
-			<BR /><BR />
-		</FIELDSET>
-		<DIV style="padding-top: 10px">
-		<TABLE>
-			<TR>
-				<TD><INPUT TYPE="button" ID="submit" NAME="submit" VALUE="SEND"></INPUT></TD>
-				<TD><SPAN CLASS = "eng">&nbsp;&nbsp;Please click SEND once only, then wait for the message!</SPAN>
-				<BR />
-				<SPAN CLASS = "fre">&nbsp;&nbsp;Veuillez cliquer une fois sur SEND, et ensuite attendre le message!</SPAN></TD>
-			</TR>
-			<TR>
-				<TD COLSPAN="2"><BR/>
-					<SPAN CLASS = "eng">If you have any problems with this registration form, please contact <a href="mailto: postmaster@servethecitygeneva.ch">info@servethecitygeneva.ch</a>.</SPAN>
-				</TD>
-			</TR>
-			<TR>
-				<TD COLSPAN="2"><BR/>
-					<SPAN CLASS = "fre">Si vous avez quelque problème que ce soit avec ce formulaire, veuillez contacter <a href="mailto: postmaster@servethecitygeneva.ch">info@servethecitygeneva.ch</a>.</SPAN>
-				</TD>
-			</TR>
-		</TABLE>
-		</DIV>
-</FORM>
+				<tr>
+					<td colspan="2"><font size="1"><span class = "eng">Everyone who signs up receives the newsletter automatically.</font></span> /
+					<span class = "fre"><font size="1">Toute personne qui s'inscrit recevra automatiquement le bulletin.</font></span></td>
+				</tr>
+			</table>
+		</fieldset><br /><br />
+		<fieldset style = "border: solid black 1px; width: 92%; padding: 20px; padding-top: 20px">
+			<div style="clear: both; width: 40%; float: left;"><span class = "eng">Any other information? Comments? Questions?</span> /
+				<span class = "fre">D'autres informations? Des commentaires ou questions?</span>
+			</div>
+			<div><textarea id="comments" name="comments" cols="30" rows="3"></textarea></div>
+			<br /><br />
+		</fieldset>
+		<div style="padding-top: 10px">
+		<table>
+			<tr>
+				<td><input type="button" id="submit" name="submit" value="SEND"></td>
+				<td><span class = "eng">&nbsp;&nbsp;Please click SEND once only, then wait for the message!</span>
+				<br />
+				<span class = "fre">&nbsp;&nbsp;Veuillez cliquer une fois sur SEND, et ensuite attendre le message!</span></td>
+			</tr>
+			<tr>
+				<td colspan="2"><br/>
+					<span class = "eng">If you have any problems with this registration form, please contact <a href="mailto: postmaster@servethecitygeneva.ch">info@servethecitygeneva.ch</a>.</span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"><br/>
+					<span class = "fre">Si vous avez quelque problème que ce soit avec ce formulaire, veuillez contacter <a href="mailto: postmaster@servethecitygeneva.ch">info@servethecitygeneva.ch</a>.</span>
+				</td>
+			</tr>
+		</table>
+		</div>
+</form>
