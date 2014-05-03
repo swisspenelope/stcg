@@ -24,6 +24,7 @@ if (isset($_GET['fct']))
 			echo $result;
 		}
 	}
+        
 	//call get members assigned by organizer - used in Signups right-hand grid
 	if ($_GET['fct'] == 'getJSONMembersAssignedToActivities')
 	{
@@ -88,7 +89,7 @@ if (isset($_GET['fct']))
 
 	if ($_GET['fct'] == 'insertNewMemberDetails')
 	{
-		$result = insertNewMemberDetails($connectionObject, $_GET['last'], $_GET['first'], $_GET['org'], $_GET['email'], do_crypt($_GET['pass']), $_GET['phone'], $_GET['source'], $_GET['comments'], $_GET['region'], $_GET['lang'], $_GET['ints']);
+		$result = insertNewMemberDetails($connectionObject, $_GET['last'], $_GET['first'], $_GET['org'], $_GET['email'], do_crypt($_GET['pass']), $_GET['phone'], $_GET['source'], $_GET['comments'], $_GET['region'], $_GET['lang'], $_GET['ints'], $_GET['acts']);
 		echo $result;
 
 		if ($result)
@@ -99,8 +100,8 @@ if (isset($_GET['fct']))
 			$volAckString = "<p>Your registration with Serve The City Geneva has been successful! <br /><br/>We look forward to seeing you at our next Event. / <span class='fre'>Votre inscription à Serve The City Geneva a été effectué. <br /><br/>Nous nous réjouissons de vous rencontrer lors de notre action prochaine.</span></p>";
 
 			//orgTo = 'EMAIL_ORG'. ', ' ;// note the comma
-			$orgTo = 'gvannatter@aol.com';
-			$orgTo .= ', ' . 'swisspenelope@gmail.com';
+			//$orgTo = 'gvannatter@aol.com';
+			$orgTo = ', ' . 'swisspenelope@gmail.com';
 			$orgSubject = 'New registration with STCG / Nouvelle inscription chez STCG';
 			$volNameString = $_GET['first'] . " " . $_GET['last'] . " has registered as a volunteer.<br /><br />";//for organizer to know who volunteered
 			$volDetailsString = "<b>How you found STCG:&nbsp;&nbsp;</b>" . $_GET['source'] . "<br /><br />
