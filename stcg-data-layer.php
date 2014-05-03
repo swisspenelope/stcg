@@ -1264,7 +1264,59 @@ function updateSelectedActivity($PDOdbObject, $actId, $actName, $actDesc, $actCo
 
 /************************************************ INSERTS *********************************************************************************/
 // USED IN ADD-NEW-MEMBER VIA JSON-RESPONSES
-function insertNewMemberDetails($PDOdbObject, $last, $first, $org, $email, $password, $phone, $source, $comments, $region, $lang, $interests)
+/*
+function insertNewMemberAndSignup($PDOdbObject, $last, $first, $org, $email, $password, $phone, $source, $comments, $region, $lang, $interests, $activities)
+{
+	try
+	{
+		//begin transaction
+		$PDOdbObject->beginTransaction();
+
+		$insertNewMemberAndSignupSQL = "INSERT INTO `member`
+		(`name_last`,`name_first`, `organization`, `email`, `password`, `phone`, `active`, `source`, `comments`, `location_id`, `language_id`)
+		VALUES (:name_last, :name_first, :organization, :email, :password, :phone, 1, :source, :comments, :location_id, :language_id)";
+		$insert = $PDOdbObject->prepare($insertNewMemberAndSignupSQL);
+		$insert->execute(array(
+				':name_last' => $last,
+				':name_first' => $first,
+				':organization' => $org,
+				':email' => $email,
+				':password' => $password,
+				':phone' => $phone,
+				':source' => $source,
+				':comments' => $comments,
+				':location_id' => $region,
+				':language_id' => $lang
+		));
+		//get new id;
+		$saved = getLatestMember($PDOdbObject);
+
+                //value to passed must be an array not a string
+		$interests = explode(",", $interests);
+		insertThisMemberInterests($PDOdbObject, $saved['id'], $interests);
+                
+                //insert member act here //ADD COMMENTS CONTROL LATER!!!!!!!!!
+                if (activities === null || activities === undefined)
+                {
+                    insertMemberActivities($PDOdbObject, $saved['id'], $activities);
+                }
+		//commit
+		$PDOdbObject->commit();
+
+		$affected_rows = $insert->rowCount();
+		return $affected_rows;
+	}
+	catch(PDOException $e)
+	{
+		$PDOdbObject->rollBack();
+		echo "There was a problem inserting this new member.";
+		echo $e->getMessage();
+	}
+}
+*/
+
+// USED IN ADD-NEW-MEMBER VIA JSON-RESPONSES
+function insertNewMemberDetails($PDOdbObject, $last, $first, $org, $email, $password, $phone, $source, $comments, $region, $lang, $interests, $activities)
 {
 	try
 	{
@@ -1289,23 +1341,18 @@ function insertNewMemberDetails($PDOdbObject, $last, $first, $org, $email, $pass
 		));
 		//get new id;
 		$saved = getLatestMember($PDOdbObject);
-		/*$insertNewMemberLocSQL = "INSERT INTO `member_location` (`member_id`, `location_id`) VALUES (:mem, :loc)";
-		$insMemLoc = $PDOdbObject->prepare($insertNewMemberLocSQL);
-		$insMemLoc->execute(array(
-		        ':mem' => $saved['id'],
-		        ':loc' => $region
-		));*/
-		/*
-		$insertNewMemberLangSQL = "INSERT INTO `member_language` (`member_id`, `language_id`) VALUES (:mem, :lang)";
-		$insMemLang = $PDOdbObject->prepare($insertNewMemberLangSQL);
-		$insMemLang->execute(array(
-		        ':mem' => $saved['id'],
-		        ':lang' => $lang
-		));*/
+
 		//value to passed must be an array not a string
 		$interests = explode(",", $interests);
 		insertThisMemberInterests($PDOdbObject, $saved['id'], $interests);
 
+                //insert member act here //ADD COMMENTS CONTROL LATER!!!!!!!!!
+                if (!($activities === null) || (!$activities === "undefined"))
+                {
+                    $activities = explode(",", $activities);
+                    insertMemberActivities($PDOdbObject, $saved['id'], $activities);
+                }
+                
 		//commit
 		$PDOdbObject->commit();
 
@@ -1320,7 +1367,7 @@ function insertNewMemberDetails($PDOdbObject, $last, $first, $org, $email, $pass
 	}
 }
 
-//USED ON THIS PAGE IN insertNewMemberDetails, VIA ADD-NEW-MEMBER
+/*
 function insertNewMemberLoc($PDOdbObject, $mem, $loc)
 {
 	try
@@ -1340,8 +1387,9 @@ function insertNewMemberLoc($PDOdbObject, $mem, $loc)
 		echo $e->getMessage();
 	}
 }
+*/
 
-//USED ON THIS PAGE IN insertNewMemberDetails, VIA ADD-NEW-MEMBER
+/*
 function insertNewMemberLang($PDOdbObject, $mem, $lang)
 {
 	try
@@ -1362,31 +1410,31 @@ function insertNewMemberLang($PDOdbObject, $mem, $lang)
 		echo $e->getMessage();
 	}
 }
-
+*/
 //USED ON THIS PAGE IN insertNewMemberDetails, VIA ADD-NEW-MEMBER
 function insertThisMemberInterests($PDOdbObject, $memberId, $interests)
 {
-	if ($interests != 0)
-	{
-		try
-		{
-			$intId = 0;
-			$ins = $PDOdbObject->prepare( "INSERT INTO member_interest (`member_id`,`interest_id`) VALUES ($memberId, :interest_id)" );
-			$ins->bindParam(':interest_id', $intId, PDO::PARAM_INT);
-			foreach($interests as $intId)
-			{
-				alertMessage($intId,SEV_DEBUG);
-				$ins->execute();
-			}
-			$affected_rows = $ins->rowCount();
-			return $affected_rows;
-		}
-		catch (PDOException $e)
-		{
-			echo "There was a problem inserting this member's interests.";
-			echo $e->getMessage();
-		}
-	}
+    if ($interests != 0)
+    {
+            try
+            {
+                    $intId = 0;
+                    $ins = $PDOdbObject->prepare( "INSERT INTO member_interest (`member_id`,`interest_id`) VALUES ($memberId, :interest_id)" );
+                    $ins->bindParam(':interest_id', $intId, PDO::PARAM_INT);
+                    foreach($interests as $intId)
+                    {
+                            alertMessage($intId,SEV_DEBUG);
+                            $ins->execute();
+                    }
+                    $affected_rows = $ins->rowCount();
+                    return $affected_rows;
+            }
+            catch (PDOException $e)
+            {
+                    echo "There was a problem inserting this member's interests.";
+                    echo $e->getMessage();
+            }
+    }
 }
 //////////// ADD THE EQUIV FUNCTIONS TO ADD NEW EVENT AND JSON FILES
 function insertNewActivityToNewEvent($PDOdbObject, $actName, $actDesc, $actCode, $cap, $date, $pl, $open, $eventId)
@@ -1416,28 +1464,32 @@ function insertNewActivityToNewEvent($PDOdbObject, $actName, $actDesc, $actCode,
     }
 }
 
-//UNUSED
-function insertMemberActivities($PDOdbObject, $memberId, $acts, $commentsIn)
+//UNUSED $commentsIn :comments
+function insertMemberActivities($PDOdbObject, $memberId, $acts)
 {
-			$insert = $PDOdbObject->prepare("INSERT INTO `member_activity` (`member_id`, `activity_id`, `comments`) VALUES ($memberId, :activity_id, :comments)" );
-			$insert->bindParam(':activity_id', $actId, PDO::PARAM_INT);
-			$insert->bindParam(':comments', $commentsIn, PDO::PARAM_INT);
-
-			foreach($acts as $actId)
-			{
-				try
-				{
-					$insert->execute();
-				}
-				catch(PDOException $e)
-				{
-					//nothing to do assuming duplicates
-				}
-			}
-
-			$affected_rows = $insert->rowCount();
-			return $affected_rows;
+    if ($acts != 0)
+    {
+        try
+        {   
+            $actId = 0;
+            $ins = $PDOdbObject->prepare( "INSERT INTO `member_activity` (`member_id`, `activity_id`) VALUES ($memberId, :activity_id)" );
+            $ins->bindParam(':activity_id', $actId, PDO::PARAM_INT);
+            foreach($acts as $actId)
+            {
+                alertMessage($actId, SEV_DEBUG);
+                $ins->execute();
+            }
+            $affected_rows = $ins->rowCount();
+            return $affected_rows;
+        }
+        catch (PDOException $e)
+        {
+                echo "There was a problem inserting this member's interests.";
+                echo $e->getMessage();
+        }
+    }
 }
+
 function deleteMemberFromActivitySelected($PDOdbObject, $memId, $actId)
 {
     try
