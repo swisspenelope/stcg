@@ -9,10 +9,10 @@ $allLanguages = getAllLanguages($connectionObject);
 $allInterests = getAllInterestsButUnknown($connectionObject);
 
 /****************************************************************************************/
-if (!empty($_GET['acts']))
+session_destroy();
+if (isset($_GET['acts']))
 {
     $_SESSION['acts'] = $_GET['acts'];
-    echo is_array($_SESSION['acts']);
 }
 ?>
 <title>
@@ -23,17 +23,16 @@ var theRegion = 0;
 var theLang = 0;
 var theInts = [];
 var intString = "";
-var activities = "{" + "<?php echo $_SESSION['acts'] ?>" + "}";
-alert(activities.toString());
+var activities = -1;
 
-//after a recaptcha error, it goes back to before document ready. if ints is not
-//reinitted below after document ready, ints simply adds to itself - bug
 $(document).ready(function ()
 {
-	$("#back").click(function ()
-	{
-        	window.top.location="http://www.servethecitygeneva.ch";
-	});
+    activities = "<?php echo $_SESSION['acts'] ?>";
+ 
+    $("#back").click(function ()
+    {
+            window.top.location="http://www.servethecitygeneva.ch";
+    });
 
     $("input[name='interests']").on('click', function()
 	{
@@ -166,8 +165,8 @@ function myCallback(response)
 //ajax call returns one or more rows inserted
 	if (response > 0)
 	{
-		alert("Thank you for your registration! / Merci de votre inscription!");
-		//window.top.location="http://www.servethecitygeneva.ch/index.php?page_id=3292";
+		//alert("Thank you for your registration! / Merci de votre inscription!");
+		window.top.location="http://www.servethecitygeneva.ch/index.php?page_id=3292";
 	}
 }
 
@@ -177,37 +176,27 @@ This is what's probably happening if response code is 200 but you still are thro
 function myCallbackError(jqXHR, textStatus, errorThrown )
 //ajax call returns any kind of error
 {
-/*		alert("The system was unable to process your registration. Please contact postmaster@servethecitygeneva.ch so that we can solve the problem. /" +
-				"Le système n'a pas pu complèter votre inscription. Veuillez contacter postmaster@servethecitygeneva.ch pour que nous puissions résoudre ce problème.\n" +
-		textStatus  + " " + errorThrown);*/
+		//alert(textStatus  + " " + errorThrown);
 		//alert("Thank you! / Merci! " + textStatus + " " + errorThrown);//JSON parse unexpected char in the errorThrown)
-		window.top.location="http://www.servethecitygeneva.ch/index.php?page_id=3299";
+		window.top.location="http://www.servethecitygeneva.ch/index.php?page_id=3299?error=" + textStatus  + " " + errorThrown;
 
 }
 
 function insertMemberInDatabase()
 {
-//YOU HAVE TO ADD THE ACTIVITIES IF THERE ARE ANY
-    if (activities === null || activities === undefined)
-    {
-        var data = "source=" + document.getElementById('source').value + "&last=" + document.getElementById('last').value + "&first=" + document.getElementById('first').value +
+    var data = "source=" + document.getElementById('source').value + "&last=" + document.getElementById('last').value + "&first=" + document.getElementById('first').value +
 "&email=" + document.getElementById('email').value + "&org=" + document.getElementById('org').value +
 "&pass=" + document.getElementById('pwd2').value + "&phone=" + document.getElementById('phone').value +
-"&comments=" + document.getElementById('comments').value + "&region=" + theRegion + "&lang=" + theLang + "&ints=" + intString;
-    }
-    else
-    {
-        alert("activities exist and are [" + activities + "]");
-    }
-  data += activities;     
- /*   $.ajax({
+"&comments=" + document.getElementById('comments').value + "&region=" + theRegion + "&lang=" + theLang + "&ints=" + intString+ "&acts=" + activities;
+    
+    $.ajax({
         dataType: 'json',
         url: 'stcg-json-responses.php?fct=insertNewMemberDetails',
         data: data,
             cache: false,
             success: myCallback,
             error: myCallbackError
-    });*/
+    });
 }
 </script>
 </head>
@@ -272,10 +261,11 @@ function insertMemberInDatabase()
 				<tr>
 					<td style="width: 40%;"><span class = "eng">Phone number</span> / <span class = "fre">Numéro de tél.</span></td>
 					<td>&nbsp;</td>
-					<td><input type="text" title="Phone number" id="phone" name="phone" SIZE="25"><!--onchange="if(this.value != '')
+					<td><input type="text" title="Phone number" id="phone" name="phone" SIZE="25">
+                                        <!--onchange="if(this.value != '')
 					{callAjax('checkPhone', this.value, this.id);}"-->
 					<!--input type="checkbox" id="valid_phone" disabled name="valid_phone">
-					<div id="rsp_phone"><!-- --></div--></td>
+					<div id="rsp_phone"></div--></td>
 				</tr>
 				<tr>
 					<td style="clear: both; width: 40%;"><span class = "eng">Organization, Association</span> / <span class = "fre">Organisation, Association</span></td>
@@ -286,7 +276,7 @@ function insertMemberInDatabase()
 		</fieldset><br /><br />
 
 		<fieldset style ="border: solid black 1px; width: 92%; padding: 20px; padding-top: 20px">
-			<legend>&nbsp;<span class = "eng"><b>Your preferences</span>&nbsp;/&nbsp;<span class = "fre">Vos préférences</b></span>&nbsp;</legend>
+			<legend>&nbsp;<span class = "eng"><b>Your preferences</span>&nbsp;/&nbsp;<span class = "fre">Vos préférences</span>&nbsp;</b></legend>
 			<table border="0">
 				<tr>
 					<td colspan="3">*&nbsp;<span class = "eng">Where do you live?</span> / <span class = "fre">Où habitez-vous?</span></td></tr>
@@ -297,7 +287,7 @@ function insertMemberInDatabase()
 					{
 				?>
 					<td style="width: 21%;">&nbsp;</td>
-					<td style="width: 2%;"><input type="radio" id ="<?php echo $value['location_id']; ?>" name="region" value="<?php echo $value['location_id']; ?>"></td>
+					<td style="width: 2%;"><input type="radio" id="<?php echo $value['location_id']; ?>" name="region" value="<?php echo $value['location_id']; ?>"></td>
 					<td style="width: 30%;"><label for="region"><?php echo $value['location_description']; ?></label></td>
 				</tr>
 				<?php
@@ -312,7 +302,7 @@ function insertMemberInDatabase()
 					{
 				?>
 					<td style="width: 21%;">&nbsp;</td>
-					<td style="width: 2%;"><input type="radio" name="lang" id="<?php echo $value['id']; ?>" value="<?php echo $value['id']; ?>"></td>
+					<td style="width: 2%;"><input type="radio" name="lang" id="<?php echo $value['id'];?>" value="<?php echo $value['id']; ?>"></td>
 					<td style="width: 30%;"><label for="lang"><?php echo $value['lang']; ?></label></td>
 				</tr>
 
