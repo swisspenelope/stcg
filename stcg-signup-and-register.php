@@ -16,6 +16,10 @@ $_SESSION['eventId'] = $event['id'];
 Signup and register for new members
 </title>
 <script type="text/javascript">
+    
+//build array of selected activities
+var selectedRows = new Array();
+
 $(document).ready(function ()
 {
     // prepare the data
@@ -65,16 +69,28 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
             {text: 'Status', datafield: 'open', width: 90}
          ]  
     });
-    
-    //build array of selected activities
-    var selectedRows = new Array();
-    //var arraySize = 0;    
+        
     $('#jqxgrid').on('rowselect', function (event) 
     {
-         var thisRow = event.args.rowindex;
-         var idCell = $('#jqxgrid').jqxGrid('getcell', thisRow, 'activity_id');
-         selectedRows.push(idCell.value);
-//         arraySize = selectedRows.length;
+        var thisRow = event.args.rowindex;
+        
+        var idCell = $('#jqxgrid').jqxGrid('getcell', thisRow, 'activity_id');
+        //if they click the All Rows box, null is returned
+        if (idCell === null)
+        {
+            //select all rows' values
+            for (var i = 0; i <= thisRow.length; i++)
+            {
+                idCell = $('#jqxgrid').jqxGrid('getcell', i, 'activity_id');
+                //alert("pushing act id " + idCell.value);
+                selectedRows.push(idCell.value);
+            }
+        }
+        else
+        {
+            selectedRows.push(idCell.value); 
+            //alert("pushing act id " + idCell.value);
+        }
      });
 
     //button initializers
@@ -83,7 +99,7 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
     //button handlers  
     $("#Register").click(function () 
     {  
-        alert ("on register button, print array " + selectedRows);    
+        //alert ("on register button, print array " + selectedRows);    
         window.location.href="stcg-add-new-member.php?acts=" + selectedRows;
     });
 });
