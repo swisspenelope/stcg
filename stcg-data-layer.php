@@ -540,10 +540,10 @@ function getJSONMembersAtEvent($PDOdbObject, $eventId)
 {
 	try
 	{
-		$membersAtEventSQL = "SELECT member.id, member.name_last, member.name_first, member.email, member.phone, activity.event_id, activity.activity_id, activity.activity_short_code, activity.activity_name, activity.capacity, activity.project_leader, member_activity_temp.selected
-			FROM `member`, `member_activity_temp`, `activity`
-			WHERE member.id = member_activity_temp.member_id
-			AND activity.activity_id = member_activity_temp.activity_id
+		$membersAtEventSQL = "SELECT member.id, member.name_last, member.name_first, member.email, member.phone, activity.event_id, activity.activity_id, activity.activity_short_code, activity.activity_name, activity.capacity, activity.project_leader, member_activity.selected
+			FROM `member`, `member_activity`, `activity`
+			WHERE member.id = member_activity.member_id
+			AND activity.activity_id = member_activity.activity_id
 			AND activity.event_id = ?";
 
 		$get = $PDOdbObject->prepare($membersAtEventSQL);//prepare also returns PDO object
@@ -1171,7 +1171,7 @@ function updateSelectedFlagforEvent($PDOdbObject, $activityId, $memberId)
 {
     try
     {    
-        $setFlagSQL = "UPDATE `member_activity_temp` SET `selected`=1 WHERE `activity_id`=:activity_id AND `member_id`=:member_id";
+        $setFlagSQL = "UPDATE `member_activity` SET `selected`=1 WHERE `activity_id`=:activity_id AND `member_id`=:member_id";
         $setFlag = $PDOdbObject->prepare($setFlagSQL);
         $setFlag->bindParam(':activity_id', $activityId, PDO::PARAM_INT);
         $setFlag->bindParam(':member_id', $memberId, PDO::PARAM_INT);
@@ -1189,7 +1189,7 @@ function updateDeletedFlagforEvent($PDOdbObject, $activityId, $memberId)
 {
     try
     {    
-        $setFlagSQL = "UPDATE `member_activity_temp` SET `selected`=0 WHERE `activity_id`=:activity_id AND `member_id`=:member_id";
+        $setFlagSQL = "UPDATE `member_activity` SET `selected`=0 WHERE `activity_id`=:activity_id AND `member_id`=:member_id";
         $setFlag = $PDOdbObject->prepare($setFlagSQL);
         $setFlag->bindParam(':activity_id', $activityId, PDO::PARAM_INT);
         $setFlag->bindParam(':member_id', $memberId, PDO::PARAM_INT);
@@ -1349,7 +1349,6 @@ function insertNewMemberDetails($PDOdbObject, $last, $first, $org, $email, $pass
                 //insert member act here //ADD COMMENTS CONTROL LATER!!!!!!!!!
                 if (!($activities === null) || (!$activities === "undefined"))
                 {
-                    $activities = explode(",", $activities);
                     insertMemberActivities($PDOdbObject, $saved['id'], $activities);
                 }
                 
@@ -1471,6 +1470,7 @@ function insertMemberActivities($PDOdbObject, $memberId, $acts)
     {
         try
         {   
+            $acts = explode(",", $acts);//now it is an array
             $actId = 0;
             $ins = $PDOdbObject->prepare( "INSERT INTO `member_activity` (`member_id`, `activity_id`) VALUES ($memberId, :activity_id)" );
             $ins->bindParam(':activity_id', $actId, PDO::PARAM_INT);
@@ -1484,7 +1484,7 @@ function insertMemberActivities($PDOdbObject, $memberId, $acts)
         }
         catch (PDOException $e)
         {
-                echo "There was a problem inserting this member's interests.";
+                echo "There was a problem inserting this member's activities.";
                 echo $e->getMessage();
         }
     }
