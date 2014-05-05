@@ -49,6 +49,12 @@ if (isset($_GET['fct']))
             $result = insertNewActivityToNewEvent($connectionObject, $_GET['activity_name'], $_GET['activity_desc'], $_GET['activity_short_code'], $_GET['capacity'], $_GET['date'], $_GET['project_leader'], $_GET['open'], $_GET['evId']);
                 echo $result;
         }
+        
+        if ($_GET['fct'] == 'insertMemberActivities')
+        {
+            $result = insertMemberActivities($connectionObject, $_GET['memId'], $_GET['acts']);
+            echo $result;
+        }
            
 	//call get activity short-codes of all activities in the event - used in drop-down list on right
 	if ($_GET['fct'] == 'getJSONAllSCsAtEvent')
