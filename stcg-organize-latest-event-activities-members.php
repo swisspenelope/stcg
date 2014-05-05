@@ -11,7 +11,7 @@ $event = getLatestEvent($connectionObject);
 if (empty($event)) {
     echo "There were either no members or this Event ID # is wrong.";
 } else {
-    //$_SESSION['eventId'] = 9;
+    
     $_SESSION['eventId'] = $event['id'];
     $_SESSION['eventName'] = $event['name'];
     $_SESSION['eventDate'] = $event['date'];
@@ -354,7 +354,7 @@ $(document).ready(function()
     <div id="content">
         <H2>Organize</H2>
         <H3>Volunteers signed up for Event ID #
-            <?php echo $event['id'] . ",&nbsp;&nbsp;&nbsp;" . $event['name']; ?></H3>
+            <?php echo $_SESSION['eventId'] . ",&nbsp;&nbsp;&nbsp;" . $_SESSION['eventName']; ?></H3>
         <table style="width: 70%">
             <tr><!-- ONLY ROW OF OUTER TABLE -->
                 <td style="vertical-align: top;"><!-- FIRST COLUMN OF OUTER TABLE -->
