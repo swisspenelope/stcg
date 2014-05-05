@@ -1,82 +1,83 @@
 <?php
-
 require_once 'header.php';
 
 if (!isset($_SESSION['user']))
 {
-	redirect_to("stcg-vol1-login.php");
+    redirect_to("stcg-vol1-login.php");
 }
 else
 {
-	/*************************** call get member with this unique email ************************/
-	/****************************************************************************************/
-echo "test";
-	$connectionObject = connect();
-	$member = getThisMemberByEmail($connectionObject, $_SESSION['user']);
-	//var_dump($member);
-	if ($member)
-	{
-		echo "Volunteer account page for " . $member['name_first'] . " " . $member['name_last'];
-	//echo $_SESSION['user'];
-	}
-	else
-	{
-		echo "Some weird error occurred.";//ask JD what might trigger this to happen, if anything...
-	}
+    /*************************** call get member with this unique email *********************/
+    /****************************************************************************************/
+
+    $connectionObject = connect();
+    $member = getThisMemberByEmail($connectionObject, $_SESSION['user']);
+    //var_dump($member);
+/*    if ($member)
+    {
+        echo "Volunteer account page for " . $member['name_first'] . " " . $member['name_last'] . " " . $_SESSION['user'];
+    }
+    else
+    {
+        echo "Some weird error occurred.";//ask JD what might trigger this to happen, if anything...
+    }*/
+
+    if (isset ($member['id']))
+            $_SESSION['memberId'] = $member['id'];
+    if (isset ($member['name_first']))
+            $_SESSION['first'] = $member['name_first'];
+    if (isset ($member['name_last']))
+            $_SESSION['last'] = $member['name_last'];
+    if (isset ($member['organization']))
+            $_SESSION['org'] = $member['organization'];
+    if (isset ($member['email']))
+            $_SESSION['email'] = $member['email'];
+    if (isset ($member['password']))
+            $_SESSION['password'] = $member['password'];
+    if (isset ($member['phone']))
+            $_SESSION['phone'] = $member['phone'];
+    if (isset ($member['source']))
+            $_SESSION['source'] = $member['source'];
+
+    if ($member['organization'] == NULL)
+            $member['organization'] = "None";
+    if ($member['phone'] == NULL)
+            $member['phone'] = "None";
 }
 ?>
-
 <title>
-Volunteer email and password authentication
+Volunteer authenticated
 </title>
 <script type="text/javascript">
 $(document).ready(function ()
 {
-	$("#back").click(function ()
-	{
-        window.location.href="stcg-vol1-login.php";
-	});
+    $("#back").click(function ()
+    {
+    window.location.href="stcg-vol1-login.php";
+    });
 
-	$("#returnToHome").click(function ()
-	{
-		$.ajax({
-			type: "GET",
-			url: "stcg-json-responses.php?fct=endSession",
-			//data: dataString,
-			success: function(response)
-			{
-				//alert("session destroyed on exit");
-				top.location.href="http://www.servethecitygeneva.ch";
-			}
-		});
-	});
+    $("#returnToHome").click(function ()
+    {
+        $.ajax({
+                type: "GET",
+                url: "stcg-json-responses.php?fct=endSession",
+                //data: dataString,
+                success: function(response)
+                {
+                        //alert("session destroyed on exit");
+                        top.location.href="http://www.servethecitygeneva.ch";
+                }
+        });
+    });
+        
+    $("#signup").click(function ()
+    {
+        //alert(<?php echo $_SESSION['memberId'] ?>);
+        window.location.href="stcg-signup-for-event.php?memId=" + <?php echo $_SESSION['memberId'] ?>;
+    });
 });
 </script>
-</head>
-<body>
 <?php
-if (isset ($member['id']))
-	$_SESSION['memberId'] = $member['id'];
-if (isset ($member['name_first']))
-	$_SESSION['first'] = $member['name_first'];
-if (isset ($member['name_last']))
-	$_SESSION['last'] = $member['name_last'];
-if (isset ($member['organization']))
-	$_SESSION['org'] = $member['organization'];
-if (isset ($member['email']))
-	$_SESSION['email'] = $member['email'];
-if (isset ($member['password']))
-	$_SESSION['password'] = $member['password'];
-if (isset ($member['phone']))
-	$_SESSION['phone'] = $member['phone'];
-if (isset ($member['source']))
-	$_SESSION['source'] = $member['source'];
-
-if ($member['organization'] == NULL)
-	$member['organization'] = "None";
-if ($member['phone'] == NULL)
-	$member['phone'] = "None";
-
 /********************* call get member interests with this unique email *****************/
 /****************************************************************************************/
 $ints = getThisMemberInterests($connectionObject, $_SESSION['user']);
@@ -88,18 +89,32 @@ $_SESSION['numberOfInts'] = count($ints);
 /**convert the returned array of interests to a string with makeInterestStringFromArray.
  * this is vital for populating the multi-select box that displays them. */
 $_SESSION['stringInts'] = makeInterestStringFromArray($ints);
-
-//echo "session user:" . $_SESSION['user'];
-
-echo "<h3>your volunteer account / <span class='fre'>Votre compte de bénévole</span></h3>";
-
+?>
+</head>
+<body>
+<?php
+    if ($member)
+    {
+?>
+    <h2>Welcome back, <?php echo $_SESSION['first'] . " " . $_SESSION['last'] ?>!</h2>
+    <h3>Your volunteer account / <span class='fre'>Votre compte de bénévole</span></h3>
+<?php
+    }
+    else
+    {
+        echo "Some weird error occurred.";//ask JD what might trigger this to happen, if anything...
+    }
+?>
+    <span style="float: right;">Click here to go straight to signup <input type="button" id="signup" value="Signup to Event" /><br /><br /></span>
+<?php
 /*****************************************************************************************/
 //form that displays member's current personal data from db and leads to edit data forms
 ?>
+        
 	<form name="change_contact" method="post" action="stcg-vol3-edit-contact.php">
 		<fieldset style = "border: solid black 1px; width: 92%; padding: 20px; padding-top: 20px">
 			<legend>&nbsp;<span class = "eng"><b>Your contact details</b></span>&nbsp;/&nbsp;<span class = "fre"><b>Vos coordonnées</b></span>&nbsp;</legend>
-				<div><input type="submit" value="Change contact details"></input></div>
+				<div><input type="submit" value="Change contact details"></div>
 				<table>
 					<tr>
 						<td style="width: 50%;">Where did you hear of us?</td>
@@ -194,4 +209,4 @@ echo "<h3>your volunteer account / <span class='fre'>Votre compte de bénévole<
 <?php
 //end current personal data form
 ?>
-<div><input type="button" id="returnToHome" name="returnToHome" value="Return to Home Page"></input></div>
+<div><input type="button" id="returnToHome" name="returnToHome" value="Return to Home Page"></div>
