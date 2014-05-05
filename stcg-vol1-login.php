@@ -110,10 +110,10 @@ function callAjax(method, value, target)
 	<td><span class = "eng">Password</span> / <span class = "fre">Mot de passe</span></td>
 	<td style="width: 2%;">*</td>
 	<td><input title="Enter your password.  Saisir votre mot de passe." type="password" id="pwd1" name="pwd1" size="25" onchange="if(this.value != '') {var em = document.getElementById('email').value; var newString = em + ' ' + this.value; callAjax('checkLoginPwd', newString, this.id);}">
-	<input type="checkbox" id="valid_pwd1" disabled name="valid_pwd1"></input>
+	<input type="checkbox" id="valid_pwd1" disabled name="valid_pwd1">
 		<div id="rsp_pwd1"><!-- --></div></td>
 </tr>
-</table>
+</table>    
 <div><input type='button' id='login' name='login' value='Log in to see your private information'>
 <input type='button' id='back' name='back' value='Back to Home Page'></div>
 </fieldset>
