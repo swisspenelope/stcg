@@ -16,7 +16,7 @@ if (isset($_SESSION['user']))
 $connectionObject = connect();
 $event = getLatestEvent($connectionObject);
 
-/* Only one Event may be active at any time, the latest Event by #ID in `event` table. */
+/* Only one Event should be active at any time, open set to 1 in `event` table. */
 
 /****************************************************************************************/
 
@@ -96,8 +96,8 @@ function callAjax(method, value, target)
 <h2 class="fre">Page de login pour nos bénévoles existants</h2>
 <form id="RETMEM" name="RETMEM" method='post' action='stcg-vol2-authenticated.php'>
 <fieldset>
-<p>Please enter your email address and password, then click <strong>Log in to see your private information</strong>.</p>
-<p class="fre">Veuillez saisir votre adresse courriel et votre mot de passe, puis cliquer sur <strong>Log in to see your private information</strong>.</p>
+<p>Please enter your email address and password, then click <strong>Log in</strong>.</p>
+<p class="fre">Veuillez saisir votre adresse courriel et votre mot de passe, puis cliquer sur <strong>Log in</strong>.</p>
 <table>
 	<tr>
 		<td><span class = "eng">Email</span> / <span class = "fre">Courriel</span></td>
@@ -114,8 +114,9 @@ function callAjax(method, value, target)
 		<div id="rsp_pwd1"><!-- --></div></td>
 </tr>
 </table>    
-<div><input type='button' id='login' name='login' value='Log in to see your private information'>
-<input type='button' id='back' name='back' value='Back to Home Page'></div>
+<div>
+<input type='button' id='back' name='back' value='Back to Home Page'>
+<input type='button' id='login' name='login' value='Log in'></div>
 </fieldset>
 </form>
 <!-- /***************************************************************************************/ -->
