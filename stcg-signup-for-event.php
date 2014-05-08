@@ -12,12 +12,21 @@ session_destroy();
 $connectionObject = connect();
 $event = getLatestEvent($connectionObject);
 $_SESSION['eventId'] = $event['id'];
-
+/*
 if (isset($_GET['memId']))
 {
     $_SESSION['memberId'] = $_GET['memId'];
+}*/
+if ($_SESSION['user'])
+{
+    $_SESSION['memberId'] = $_GET['memId'];
+}
+ else 
+{
+    header('Location: stcg-vol1-login.php');  
 }
 ?>
+
 <head> 
 <title>
 Signup for an Event
@@ -43,7 +52,7 @@ $(document).ready(function ()
             {name: 'date'},
             {name: 'open'}
         ],
-        /*url: 'stcg-json-responses.php?fct=getJSONAllActivitiesAtEvent&eventId=<?php echo $_SESSION['eventId'] ?>',*/
+        //url: 'stcg-json-responses.php?fct=getJSONAllActivitiesAtEvent&eventId=<?php echo $_SESSION['eventId'] ?>',
         url: 'stcg-json-responses.php?fct=getJSONAllActivitiesAtEvent&eventId=' + thisEvent,
         sortcolumn: 'activity_id',//note rowid order follows activity_id!
         sortdirection: 'asc',
@@ -131,7 +140,7 @@ function myCallback(response)
 	if (response > 0)
 	{
 		//alert("Thank you for your registration! / Merci de votre inscription!");
-		window.top.location="http://www.servethecitygeneva.ch/index.php?page_id=3292";
+		window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3292";
 	}
 }
 
@@ -142,7 +151,7 @@ function myCallbackError(jqXHR, textStatus, errorThrown )
 //ajax call returns any kind of error
 {
     //alert(textStatus  + " " + errorThrown);
-    window.top.location="http://www.servethecitygeneva.ch/index.php?page_id=3299";
+    window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3299";
 }
 
 </script>
