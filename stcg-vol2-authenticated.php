@@ -43,6 +43,8 @@ else
             $member['organization'] = "None";
     if ($member['phone'] == NULL)
             $member['phone'] = "None";
+    
+    $_SESSION['user'] = $_SESSION['email'];
 }
 ?>
 <title>
@@ -65,7 +67,7 @@ $(document).ready(function ()
                 success: function(response)
                 {
                         //alert("session destroyed on exit");
-                        top.location.href="http://www.servethecitygeneva.ch";
+                        top.location.href="https://www.servethecitygeneva.ch";
                 }
         });
     });
@@ -93,7 +95,7 @@ $_SESSION['stringInts'] = makeInterestStringFromArray($ints);
 </head>
 <body>
 <?php
-    if ($member)
+    if ($member) 
     {
 ?>
     <h2>Welcome back, <?php echo $_SESSION['first'] . " " . $_SESSION['last'] ?>!</h2>
@@ -105,7 +107,9 @@ $_SESSION['stringInts'] = makeInterestStringFromArray($ints);
         echo "Some weird error occurred.";//ask JD what might trigger this to happen, if anything...
     }
 ?>
-    <span style="float: right;">Click here to go straight to signup <input type="button" id="signup" value="Signup to Event" /><br /><br /></span>
+    <div style="width: 92%; padding: 20px; padding-top: 5px; clear: both;">
+        Click this button to go straight to the signup page for our latest Event <input type="button" id="signup" value="Signup to Event" />
+    </div>
 <?php
 /*****************************************************************************************/
 //form that displays member's current personal data from db and leads to edit data forms
