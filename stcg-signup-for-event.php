@@ -64,7 +64,7 @@ $(document).ready(function ()
  // initialize jqxGrid
     $("#jqxgrid").jqxGrid(
     {
-        width: 1200,
+        width: 540,
         source: data,
         sortable: true,
         pageable: false,
@@ -75,10 +75,9 @@ $(document).ready(function ()
         [
             {text: '#', datafield: 'activity_id', width: 40},
             {text: 'Act. Name', datafield: 'activity_name', width: 250},
-            {text: 'Act. Desc', datafield: 'activity_desc', width: 450},
             {text: 'Code', datafield: 'activity_short_code', width: 60},
             {text: 'Date', datafield: 'date', width: 90},
-            {text: 'Status', datafield: 'open', width: 90}
+            {text: 'Status', datafield: 'open', width: 70}
          ]  
     });
     
@@ -119,10 +118,10 @@ $(document).ready(function ()
     });
 });
 
-function insertMemberActivities()
+function insertMemberActivities()///add sth to prevent them signing up for same event twice! (unique key error)
 {
     var actString = selectedRows.toString();
-    var data = "memId=" + <?php echo $_SESSION['memberId'];?> + "&acts=" + actString;
+    var data = "memId=" + <?php echo $_SESSION['memberId'];?> + "&acts=" + actString + "&comments=" + document.getElementById('comments').value;
 
     $.ajax({
         dataType: 'json',
@@ -139,8 +138,8 @@ function myCallback(response)
 //ajax call returns one or more rows inserted
 	if (response > 0)
 	{
-		//alert("Thank you for your registration! / Merci de votre inscription!");
-		window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3292";
+		alert("Thank you for your registration! / Merci de votre inscription!");
+		//window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3292";
 	}
 }
 
@@ -150,8 +149,8 @@ This is what's probably happening if response code is 200 but you still are thro
 function myCallbackError(jqXHR, textStatus, errorThrown )
 //ajax call returns any kind of error
 {
-    //alert(textStatus  + " " + errorThrown);
-    window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3299";
+    alert(textStatus  + " " + errorThrown);
+    //window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3299";
 }
 
 </script>
@@ -163,7 +162,16 @@ function myCallbackError(jqXHR, textStatus, errorThrown )
      
     <div id='jqxWidget'>
         <div id='jqxgrid' style="margin-bottom: 20px;"></div>
-        <div><input type="button" id="Send" value="Send" /></div>    
+        <div style="width: 92%; padding: 20px; padding-top: 10px">
+            <div style="clear: both; float: left;">
+                <span class="eng">Comments<br />(Time constraints? Bringing friends?)</span>
+                    /<br /><span class="fre">Commentaires<br />(Horaire? Vous venez avec des ami(e)s?)</span>
+            </div>
+            <div>
+                    <textarea id="comments" name="comments" cols="30" rows="3"></textarea>
+            </div>
+        </div>
+        <div style="padding-top: 20px;"><input type="button" id="Send" value="Send" /></div>    
     </div>
 
 </body>
