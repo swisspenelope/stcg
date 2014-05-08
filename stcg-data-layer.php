@@ -122,7 +122,8 @@ function getLatestEvent($PDOdbObject)
 {
 	try
 	{
-		$latestEventSQL = "SELECT * FROM `event` WHERE `open` = 1 ORDER BY `id` DESC LIMIT 1";
+		$latestEventSQL = "SELECT * FROM `event` WHERE `open` = 1 ORDER BY `id`";
+                       // . "DESC LIMIT 1"; THIS IS A TEST TO SEE WHAT HAPPENS WHEN 2 ARE OPEN
 		$get = $PDOdbObject->prepare($latestEventSQL);//prepare also returns PDO object
 		$get->execute(array());
 
@@ -535,12 +536,11 @@ return $rows;
 //USED ON DATABASE ADMIN PAGE ORGANIZE-LATEST-EVENT-ACTIVITES-MEMBERS.PHP
 // LIST-EVENT-ACTIVITIES-WITH-MEMBERS VIA JSON-RESPONSES
 //FROM `member`, `member_activity`, `activity`
-///////////BE AWARE OF HACK FOR NEW TABLE COLUMN!////////////////
 function getJSONMembersAtEvent($PDOdbObject, $eventId)
 {
 	try
 	{
-		$membersAtEventSQL = "SELECT member.id, member.name_last, member.name_first, member.email, member.phone, activity.event_id, activity.activity_id, activity.activity_short_code, activity.activity_name, activity.capacity, activity.project_leader, member_activity.selected
+		$membersAtEventSQL = "SELECT member.id, member.name_last, member.name_first, member.email, member.phone, activity.event_id, activity.activity_id, activity.activity_short_code, activity.activity_name, activity.capacity, activity.project_leader, member_activity.comments, member_activity.selected
 			FROM `member`, `member_activity`, `activity`
 			WHERE member.id = member_activity.member_id
 			AND activity.activity_id = member_activity.activity_id
@@ -561,6 +561,7 @@ function getJSONMembersAtEvent($PDOdbObject, $eventId)
 		$get->bindColumn('activity_name', $actName);
 		$get->bindColumn('capacity', $capName);
 		$get->bindColumn('project_leader', $pl);
+                $get->bindColumn('comments', $comments);
 		$get->bindColumn('selected', $sel);
 
 		$rows = $get->fetchAll(PDO::FETCH_ASSOC);
@@ -1463,8 +1464,7 @@ function insertNewActivityToNewEvent($PDOdbObject, $actName, $actDesc, $actCode,
     }
 }
 
-//UNUSED $commentsIn :comments
-function insertMemberActivities($PDOdbObject, $memberId, $acts)
+function insertMemberActivities($PDOdbObject, $memberId, $acts, $commentsIn)
 {
     if ($acts != 0)
     {
@@ -1472,8 +1472,9 @@ function insertMemberActivities($PDOdbObject, $memberId, $acts)
         {   
             $acts = explode(",", $acts);//now it is an array
             $actId = 0;
-            $ins = $PDOdbObject->prepare( "INSERT INTO `member_activity` (`member_id`, `activity_id`) VALUES ($memberId, :activity_id)" );
+            $ins = $PDOdbObject->prepare( "INSERT INTO `member_activity` (`member_id`, `activity_id`, `comments`) VALUES ($memberId, :activity_id, :comments)" );
             $ins->bindParam(':activity_id', $actId, PDO::PARAM_INT);
+            $ins->bindParam(':comments', $commentsIn, PDO::PARAM_INT);
             foreach($acts as $actId)
             {
                 alertMessage($actId, SEV_DEBUG);
