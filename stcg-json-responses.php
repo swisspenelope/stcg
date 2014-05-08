@@ -52,7 +52,7 @@ if (isset($_GET['fct']))
         
         if ($_GET['fct'] == 'insertMemberActivities')
         {
-            $result = insertMemberActivities($connectionObject, $_GET['memId'], $_GET['acts']);
+            $result = insertMemberActivities($connectionObject, $_GET['memId'], $_GET['acts'], $_GET['comments']);
             echo $result;
         }
            
