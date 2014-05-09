@@ -22,6 +22,7 @@ define('HTML_CHARSET',  'utf8');
 define('ENV_DEV', 'localhost');
 define('ENV_PROD', 'servethecitygeneva.ch');
 //define('ENV_PROD', 'hacksrus.biz/stcg/signup');
+define('ADMIN', 'swisspenelope@gmail.com');
 
 
 //DB
