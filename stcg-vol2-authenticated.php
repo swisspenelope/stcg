@@ -13,15 +13,7 @@ else
     $connectionObject = connect();
     $member = getThisMemberByEmail($connectionObject, $_SESSION['user']);
     //var_dump($member);
-/*    if ($member)
-    {
-        echo "Volunteer account page for " . $member['name_first'] . " " . $member['name_last'] . " " . $_SESSION['user'];
-    }
-    else
-    {
-        echo "Some weird error occurred.";//ask JD what might trigger this to happen, if anything...
-    }*/
-
+    
     if (isset ($member['id']))
             $_SESSION['memberId'] = $member['id'];
     if (isset ($member['name_first']))
@@ -77,6 +69,15 @@ $(document).ready(function ()
         //alert(<?php echo $_SESSION['memberId'] ?>);
         window.location.href="stcg-signup-for-event.php?memId=" + <?php echo $_SESSION['memberId'] ?>;
     });
+    
+    
+    <?php if ($_SESSION['user'] === ADMIN || $_SESSION['user'] === SUB_ADMIN)
+    {
+        ?>
+        document.getElementById("access").setAttribute("style","visibility: visible");
+        <?php
+    }
+        ?>
 });
 </script>
 <?php
@@ -107,6 +108,7 @@ $_SESSION['stringInts'] = makeInterestStringFromArray($ints);
         echo "Some weird error occurred.";//ask JD what might trigger this to happen, if anything...
     }
 ?>
+</-- TAKE THIS OUT AFTER EVENT --/>
     <div style="width: 92%; padding: 20px; padding-top: 5px; clear: both;">
         Click this button to go straight to the signup page for our latest Event <input type="button" id="signup" value="Signup to Event" />
     </div>
@@ -214,3 +216,9 @@ $_SESSION['stringInts'] = makeInterestStringFromArray($ints);
 //end current personal data form
 ?>
 <div><input type="button" id="returnToHome" name="returnToHome" value="Return to Home Page"></div>
+<div id="access" style="visibility: hidden; width: 40%; padding: 20px; padding-top: 5px; clear: both;">
+    <?php include 'stcg-admin-access.php'; ?>
+</div>
+<?php
+    include 'footer.php';
+?>
