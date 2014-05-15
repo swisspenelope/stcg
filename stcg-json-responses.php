@@ -176,8 +176,9 @@ if (isset($_GET['fct']))
 	}
 	if ($_GET['fct'] == 'getJSONAllMembers')
 	{
-		$result = getJSONAllMembers($connectionObject);
-		echo $result;
+            $result = getJSONAllMembers($connectionObject, $_GET['nameFirst'], $_GET['nameLast']);
+            //$result = getJSONAllMembers($connectionObject, "pen", "hac");
+            echo $result;
 	}
 	if ($_GET['fct'] == 'getJSONMembersByInterest')
 	{
