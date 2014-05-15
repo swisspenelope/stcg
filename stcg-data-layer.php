@@ -98,23 +98,35 @@ function getAllInterestsButUnknown($PDOdbObject)
     return $rows;
 }
 
-//USED IN LIST-ALL-MEMBERS VIA JSON-RESPONSES
-function getJSONAllMembers($PDOdbObject)
+//USED FOR ADMIN ACCESS TO USER ACCOUNTS ON stcg-list-members-and-details.php
+function getJSONAllMembers($PDOdbObject, $first, $last)
 {
-	try
-	{
-		$getAllMembersSQL = "SELECT `id`,`name_first`,`name_last`,`organization`,`email`,`active`,`phone`,`comments`, `location_id`, `language_id` FROM `member` WHERE `active` = 1 ORDER BY `id`";
-		$get = $PDOdbObject->query($getAllMembersSQL);
-		$rows = $get->fetchAll(PDO::FETCH_ASSOC);
-		$json=json_encode($rows);
-	}
-	catch (PDOException $e)
-	{
-		echo "There was a problem getting all the members.";
-		echo $e->getMessage();
-	}
-	return $json;
+    try
+    {
+        $allMembersSQL = "SELECT `id`,`name_first`,`name_last`,`organization`,`email`,`active`,`phone`,`comments`, `location_id`, `language_id` FROM `member` WHERE `active` = 1 AND member.name_first LIKE :first AND member.name_last LIKE :last";
+        $getMatches = $PDOdbObject->prepare($allMembersSQL);
+        //$params = array("%$first%", "%$last%");
+        
+        $first = $first."%";
+        $last = $last."%";
+        
+// Bind the parameter
+        $getMatches->bindParam(':first', $first, PDO::PARAM_STR);
+        $getMatches->bindParam(':last', $last, PDO::PARAM_STR);
+        
+        $getMatches->execute();
+        $rows = $getMatches->fetchAll();
+        //$getMatches->execute(array('%$last%', '%$first%'));  
+    }
+    catch (PDOException $e)
+    {
+        echo "There was a problem getting all members with this search query.";
+        echo $e->getMessage();
+    }
+    $json=json_encode($rows);
+    return $json;
 }
+
 
 //USED ON SIGNUP WIZARD PAGE STCG-VOL1.PHP
 //USED ON DATABASE ADMIN PAGE ORGANIZE-LATEST-EVENT-ACTIVITES-MEMBERS.PHP
@@ -133,11 +145,11 @@ function getLatestEvent($PDOdbObject)
 
 		while ($result = $get->fetch(PDO::FETCH_BOUND))
 		{
-			$event = array(
-				"id" => $id,
-				"name" => $name,
-				"date" => $date
-				);
+                    $event = array(
+                            "id" => $id,
+                            "name" => $name,
+                            "date" => $date
+                            );
 		}//end while
 
 	}//end try
