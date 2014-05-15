@@ -23,7 +23,7 @@ define('ENV_DEV', 'localhost');
 define('ENV_PROD', 'servethecitygeneva.ch');
 //define('ENV_PROD', 'hacksrus.biz/stcg/signup');
 define('ADMIN', 'swisspenelope@gmail.com');
-
+define('SUB_ADMIN', 'gvannatter@aol.com');
 
 //DB
 if ($_SERVER['HTTP_HOST'] == ENV_DEV)
