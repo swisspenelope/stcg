@@ -1,7 +1,4 @@
 <?php
-/*
-session handing added for security 2014.01.29
-*/
 require_once 'header.php';
 session_destroy();
 /*
@@ -120,6 +117,6 @@ function callAjax(method, value, target)
 </fieldset>
 </form>
 <!-- /***************************************************************************************/ -->
-<?php
-//end login form
-?>
+    <?php
+    include_once 'footer.php';
+    ?>
