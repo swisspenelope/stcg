@@ -12,11 +12,7 @@ $_SESSION['eventId'] = $event['id'];
 Create New Event and Activities page
 </title>
 <script type="text/javascript">
- /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */    
+
 $(document).ready(function ()
 {
     // prepare the data
@@ -52,7 +48,7 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
             if ($("#activity_id").val() === "" || $("#activity_id").val() === null)
             //if (rowid === "" || rowid === null)
             {
-                var insData = "activity_name=" + rowdata.activity_name + "&activity_desc=" + rowdata.activity_desc + "&activity_short_code=" + rowdata.activity_short_code + "&capacity=" + rowdata.capacity + "&date=" + rowdata.date + "&project_leader=" + rowdata.project_leader + "&open=" + 1 + "&evId=" + thisEvent;  
+                var insData = "activity_name=" + rowdata.activity_name + "&activity_desc=" + rowdata.activity_desc + "&activity_short_code=" + rowdata.activity_short_code + "&capacity=" + rowdata.capacity + "&date=" + rowdata.date + "&project_leader=" + rowdata.project_leader + "&open=" + rowdata.open + "&evId=" + thisEvent;  
                 //rowdata.open
                
                 $.ajax({
@@ -67,8 +63,9 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
             else
             {
 //update table activity
+
                 var data = "activity_id=" + rowdata.activity_id + "&activity_name=" + rowdata.activity_name + "&activity_desc=" + rowdata.activity_desc + "&activity_short_code=" + rowdata.activity_short_code + "&capacity=" + rowdata.capacity + "&date=" + rowdata.date + "&project_leader=" + rowdata.project_leader + "&open=" + rowdata.open;            
-                
+            //alert(data);    
                 $.ajax({
                    dataType: 'json',
                    url: 'stcg-json-responses.php?fct=updateSelectedActivity&actId=' + rowdata.activity_id,
@@ -86,29 +83,30 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
  // initialize jqxGrid
     $("#jqxgrid").jqxGrid(
     {
-        width: 1200,
+        width: 1240,
         source: data,
         sortable: true,
         pageable: false,
         editable: false,
         autoheight: true,
+        autorowheight: true,
         columns:  
         [
             {text: '#', datafield: 'activity_id', width: 40},
-            {text: 'Act. Name', datafield: 'activity_name', width: 240},
+            {text: 'Act. Name', datafield: 'activity_name', width: 260},
             {text: 'Act. Desc', datafield: 'activity_desc', width: 400},
             {text: 'Code', datafield: 'activity_short_code', width: 60},
             {text: 'Cap.', datafield: 'capacity', width: 40},
-            {text: 'Date', datafield: 'date', width: 90},
-            {text: 'PL', datafield: 'project_leader', width: 160},
-            {text: 'Open', datafield: 'open', width: 40},
+            {text: 'Date', datafield: 'date', columntype: 'datetimeinput', width: 140, cellsalign: 'right'},
+            {text: 'PL', datafield: 'project_leader', width: 240},
+          /*  {text: 'Open', datafield: 'open', width: 40}, */
             {text: 'Edit', datafield: 'Edit', columntype: 'button', cellsrenderer: function () 
                 {
                    return "Edit";
                 }, buttonclick: function (row) 
                 {
                // open the popup window when the user clicks a button.
-                    //alert("this is the row id being called in edit click of grid construct: " + row);
+               //alert("this is the row id being called in edit click of grid construct: " + row);
                     editrow = row;
                     var offset = $("#jqxgrid").offset();
                     $("#editWindow").jqxWindow(
@@ -138,7 +136,7 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
     $("#capacity").jqxInput({ theme: 'classic' });
     $("#date").jqxInput({ theme: 'classic' });
     $("#project_leader").jqxInput({ theme: 'classic' });
-    //$("#open").jqxInput({ theme: 'classic' });
+    $("#open").jqxInput({ theme: 'classic' });
 
     $("#activity_id").width(200);
     $("#activity_id").height(40);
@@ -151,25 +149,43 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
     $("#activity_short_code").height(40);
     $("#capacity").width(200);
     $("#capacity").height(40);
-    $("#date").width(200);
+    
+    $("#date").width(150);
     $("#date").height(40);
+
     $("#project_leader").width(200);
     $("#project_leader").height(40);
-/*    $("#open").width(200);
-    $("#open").height(40);*/
+    $("#open").width(200);
+    $("#open").height(40);
+    
+    //$("#jqxWidget").jqxDateTimeInput({ animationType: 'fade', width: '150px', height: '25px', animationType: 'fade', dropDownHorizontalAlignment: 'right'});
 
  // initialize the popup window and buttons.
     $("#editWindow").jqxWindow({
         width: 800, resizable: true, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01      
     });
-    $("#editWindow").on('open', function () {
-        //$("#activity_name").jqxInput('selectAll');
+    $("#editWindow").on('open', function () 
+    {
+        //$("#open").val(1);
     });
 
 //button initializers
     $("#NewRow").jqxButton({ theme: 'classic' });
+    $("#DeleteRow").jqxButton({ theme: 'classic' });
     $("#Cancel").jqxButton({ theme: 'classic' });
     $("#Save").jqxButton({ theme: 'classic' });
+    
+//row select handler
+$('#jqxgrid').on('rowclick', function (event) 
+{
+    var args = event.args;
+    del = args.rowindex;
+    //alert(del);
+ //same thing   
+    var id = $('#jqxgrid').jqxGrid('getrowid', del);
+    //alert(id);
+}); 
+
 
 //button handlers  
 // create new row.
@@ -186,6 +202,16 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
         // show the popup window.
             $("#editWindow").jqxWindow('open');
          });
+         
+        $("#DeleteRow").on('click', function () {
+           var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
+           var rowscount = $("#jqxgrid").jqxGrid('getdatainformation').rowscount;
+           if (selectedrowindex >= 0 && selectedrowindex < rowscount) 
+           {
+               var id = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
+               var commit = $("#jqxgrid").jqxGrid('deleterow', id);
+           }
+       });       
  
 // update the edited row when the user clicks the 'Save' button.
         // note that 'Save' is inside popup window
@@ -204,19 +230,19 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
                 capacity: $("#capacity").val(), 
                 date: $("#date").val(), 
                 project_leader: $("#project_leader").val(),
+                open: $("#open").val(),
                 event_id: thisEvent
             };
 //open: $("#open").val(),
             //var rowID = $('#jqxgrid').jqxGrid('getrowid', editrow);
             
 //call the famous update row function
-            //$('#jqxgrid').jqxGrid('updaterow', rowID, row);//row is an object with all row values in it
             $('#jqxgrid').jqxGrid('updaterow', editrow, row);//row is an object with all row values in it
             $("#editWindow").jqxWindow('close');
         }
     });
     //alert("just before end of page loading code, number of rows in grid so far is " + $("#jqxgrid").jqxGrid('getrows').length);    
-});
+});   //end document ready
 
 function validateRowContents()
 {
@@ -282,13 +308,16 @@ function setInputFormToEmpty()
     $("#capacity").val('');
     $("#date").val('');
     $("#project_leader").val('');
-    //$("#open").val('');
+    $("#open").val('');
 }
 </script>
 </head>
 <body>
      <h2>Add Activities to new Event: <?php echo $event['name'] ?></h2>
-    <div style="padding: 10px; float: left;"><input type="button" id="NewRow" value="Add New Row" /></div>
+    <div style="padding: 10px;">
+        <input type="button" id="NewRow" value="Add New Row" />
+        <input type="button" id="DeleteRow" value="Delete Selected Row" /> 
+    </div>
     <div id='jqxWidget'>
         <div id="jqxgrid"></div>
         <div style="margin-top: 30px;">
@@ -298,7 +327,7 @@ function setInputFormToEmpty()
        <!--///////////////////// POPUP WINDOW ///////////////////////////////-->
        <div id="editWindow">
             <div>Edit</div>
-            <div style="overflow: hidden;">
+            <div style="float: left; overflow: hidden;">
                 <table>
                     <tr>
                         <td align="right">Activity Id:</td>
@@ -328,10 +357,10 @@ function setInputFormToEmpty()
                         <td align="right">Project Leader:</td>
                         <td align="left"><input id="project_leader"></td>
                     </tr>
-                    <!--tr>
+                    <tr>
                         <td align="right">Open:</td>
-                        <td align="left"><input id="open" readonly style="background-color: #e2e2e2">1</td>
-                    </tr-->
+                        <td align="left"><input id="open"></td>
+                    </tr>
                     <tr>
                         <td align="right"><input type="hidden" value=thisEvent></td>
                         <td style="padding-top: 10px;" align="right">
