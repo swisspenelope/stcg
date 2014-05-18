@@ -139,7 +139,7 @@ function myCallback(response)
 	if (response > 0)
 	{
 		alert("Thank you for your registration! / Merci de votre inscription!");
-		//window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3292";
+		window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3292";
 	}
 }
 
@@ -150,7 +150,7 @@ function myCallbackError(jqXHR, textStatus, errorThrown )
 //ajax call returns any kind of error
 {
     alert(textStatus  + " " + errorThrown);
-    //window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3299";
+    window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3299";
 }
 
 </script>
