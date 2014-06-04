@@ -104,13 +104,18 @@ function callAjax(method, value, target)
 			<div id="rsp_email"><!-- --></div></td>
 	</tr>
 	<tr>
-	<td><span class = "eng">Password</span> / <span class = "fre">Mot de passe</span></td>
-	<td style="width: 2%;">*</td>
-	<td><input title="Enter your password.  Saisir votre mot de passe." type="password" id="pwd1" name="pwd1" size="25" onchange="if(this.value != '') {var em = document.getElementById('email').value; var newString = em + ' ' + this.value; callAjax('checkLoginPwd', newString, this.id);}">
-	<input type="checkbox" id="valid_pwd1" disabled name="valid_pwd1"><div id="rsp_pwd1"><!-- --></div>
-        <p>If you have forgotten your password, it is either your first name in lowercase (by default), else, email the webmaster at <a href="mailto: postmaster@servethecitygeneva.ch">postmaster@servethecitygeneva.ch</a> for a new one.</p><p class="fre">Si vous avez oublié votre mot de passe, il est par défault votre prénom en minuscule. Si cela ne marche pas, envoyer un courriel au webmaster à <a href="mailto: postmaster@servethecitygeneva.ch">postmaster@servethecitygeneva.ch</a> pour en recevoir un nouveau.</p>
-		</td>
-</tr>
+            <td><span class = "eng">Password</span> / <span class = "fre">Mot de passe</span></td>
+            <td style="width: 2%;">*</td>
+            <td>
+                <input title="Enter your password.  Saisir votre mot de passe." type="password" id="pwd1" name="pwd1" size="25" onchange="if(this.value != '') {var em = document.getElementById('email').value; var newString = em + ' ' + this.value; callAjax('checkLoginPwd', newString, this.id);}">
+                <input type="checkbox" id="valid_pwd1" disabled name="valid_pwd1"><div id="rsp_pwd1"><!-- --></div>
+            </td>
+        </tr>
+	<tr>
+            <td colspan="3">
+        <p>If you have forgotten your password, it is either your first name in lowercase (by default), or if that doesn't work, email the webmaster at <a href="mailto: postmaster@servethecitygeneva.ch">postmaster@servethecitygeneva.ch</a> for a new one.</p><p class="fre">Si vous avez oublié votre mot de passe, il est par défault votre prénom en minuscule. Si cela ne marche pas, envoyer un courriel au webmaster à <a href="mailto: postmaster@servethecitygeneva.ch">postmaster@servethecitygeneva.ch</a> pour en recevoir un nouveau.</p>
+            </td>
+        </tr>
 </table>    
 <div>
 <input type='button' id='back' name='back' value='Back to Home Page'>
