@@ -7,9 +7,9 @@
 <TITLE>
 Volunteer personal details page
 </TITLE>
-<link rel ="stylesheet" type="text/css" href="css/theme.css">
-<link rel ="stylesheet" type="text/css" href="css/structure.css">
-<link rel ="stylesheet" type="text/css" href="css/form.css">
+    <link rel ="stylesheet" type="text/css" href="css/theme.css"></link>
+    <link rel ="stylesheet" type="text/css" href="css/structure.css"></link>
+    <link rel ="stylesheet" type="text/css" href="css/form.css"></link>
 </HEAD>
 <BODY>
 <H2>Sorry, the site is temporarily unavailable!</H2>
