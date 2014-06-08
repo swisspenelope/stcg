@@ -64,7 +64,7 @@ $(document).ready(function ()
  // initialize jqxGrid
     $("#jqxgrid").jqxGrid(
     {
-        width: 540,
+        width: 580,
         source: data,
         sortable: true,
         pageable: false,
@@ -74,10 +74,10 @@ $(document).ready(function ()
         columns:  
         [
             {text: '#', datafield: 'activity_id', width: 40},
-            {text: 'Act. Name', datafield: 'activity_name', width: 250},
-            {text: 'Code', datafield: 'activity_short_code', width: 60},
-            {text: 'Date', datafield: 'date', width: 90},
-            {text: 'Status', datafield: 'open', width: 70}
+            {text: 'Act. Name', datafield: 'activity_name', width: 300},
+            {text: 'Code', datafield: 'activity_short_code', width: 100},
+            {text: 'Date', datafield: 'date', width: 100},
+          /*  {text: 'Status', datafield: 'open', width: 70}*/
          ]  
     });
     
@@ -126,7 +126,7 @@ function insertMemberActivities()///add sth to prevent them signing up for same 
     $.ajax({
         dataType: 'json',
         url: 'stcg-json-responses.php?fct=insertMemberActivities',
-        data: data,
+         data: data,
             cache: false,
             success: myCallback,
             error: myCallbackError
@@ -135,10 +135,11 @@ function insertMemberActivities()///add sth to prevent them signing up for same 
 ////////// CALLBACK - SUCCESS /////////////////////////
 function myCallback(response)
 {
-//ajax call returns one or more rows inserted
-	if (response > 0)
-	{
-		alert("Thank you for your registration! / Merci de votre inscription!");
+        //ajax call one or more rows inserted
+        //alert(typeof response);
+	if ( response > 0)
+	{  
+		//alert("Thank you for your registration! / Merci de votre inscription!");
 		window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3292";
 	}
 }
@@ -146,20 +147,27 @@ function myCallback(response)
 ////////// CALLBACK - FAILURE /////////////////////////
 /*Error callback is called on http errors, but also if JSON parsing on the response fails.
 This is what's probably happening if response code is 200 but you still are thrown to error callback.*/
-function myCallbackError(jqXHR, textStatus, errorThrown )
-//ajax call returns any kind of error
+function myCallbackError(response, jqXHR, settings, status) 
 {
-    alert(textStatus  + " " + errorThrown);
-    window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3299";
-}
-
+    if (isNaN(response))
+    {    
+        //var sub = settings.toString();
+        //alert("settings " + sub + " stat " + status + " " + jqXHR + " response " + response.responseText);
+        response = response.responseText;
+        var detail = response.substring(0,15);
+        if ( detail === "SQLSTATE[23000]")
+        {
+            //alert("message " + detail);
+            window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3299";
+        }
+    }
+}   
 </script>
 </head>
 <body>
      <h2>Sign up for this Event: <?php echo $event['name'] ?></h2>
-     <h3>You may choose several mutually exclusive activities (that are on the same day at the same time).</h3>
-     <p>We will put you wherever the need is greatest. However, if you have a strong preference for one activity but don't mind doing others, check all you are interested in, and name your preferred activity in the Comments box. We will do our best to accommodate your preference!</p>
-     
+     <h2 class="fre">Inscrivez-vous pour l'action Collecte alimentaire "Partage"</h2>
+ 
     <div id='jqxWidget'>
         <div id='jqxgrid' style="margin-bottom: 20px;"></div>
         <div style="width: 92%; padding: 20px; padding-top: 10px">
@@ -168,11 +176,18 @@ function myCallbackError(jqXHR, textStatus, errorThrown )
                     /<br /><span class="fre">Commentaires<br />(Horaire? Vous venez avec des ami(e)s?)</span>
             </div>
             <div>
-                    <textarea id="comments" name="comments" cols="30" rows="3"></textarea>
+                    <textarea id="comments" name="comments" cols="32" rows="3"></textarea>
             </div>
         </div>
-        <div style="padding-top: 20px;"><input type="button" id="Send" value="Send" /></div>    
+        <div style="padding-top: 20px;"><input type="button" id="Send" value="Send" /></div>
+        <div class="result"></div>
+        <div class="log"></div>
     </div>
-
+    <h3>You may choose several mutually exclusive activities (that are on the same day at the same time).</h3>
+     <p>We will put you wherever the need is greatest. However, if you have a strong preference for one activity, note your preference in the Comments box.</p>
+     
+     <h3 class="fre">Vous pouvez sÃ©lectionner plusieurs activitÃ©s mutuellement exclusives (c'est Ã  dire qui ont lieu le mÃªme jour Ã  la mÃªme heure.</h3>
+     <p class="fre">Nous vous affecterons lÃ  oÃ¹ le besoin est le plus grand. Cependant, si vous avez une forte prÃ©fÃ©rence pour une activitÃ©, inscrivez votre prÃ©fÃ©rence dans la case Commentaires.</p>
+     
 </body>
 </html>
