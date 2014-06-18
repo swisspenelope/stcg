@@ -98,8 +98,26 @@ function getAllInterestsButUnknown($PDOdbObject)
     return $rows;
 }
 
+//USED IN LIST-ALL-MEMBERS VIA JSON-RESPONSES
+function getJSONAllMembers($PDOdbObject)
+{
+	try
+	{
+		$getAllMembersSQL = "SELECT `id`,`name_first`,`name_last`,`organization`,`email`,`active`,`phone`,`comments`, `location_id`, `language_id` FROM `member` WHERE `active` = 1 ORDER BY `id`";
+		$get = $PDOdbObject->query($getAllMembersSQL);
+		$rows = $get->fetchAll(PDO::FETCH_ASSOC);
+		$json=json_encode($rows);
+	}
+	catch (PDOException $e)
+	{
+		echo "There was a problem getting all the members.";
+		echo $e->getMessage();
+	}
+	return $json;
+}
+
 //USED FOR ADMIN ACCESS TO USER ACCOUNTS ON stcg-list-members-and-details.php
-function getJSONAllMembers($PDOdbObject, $first, $last)
+function getJSONSelectedMembers($PDOdbObject, $first, $last)
 {
     try
     {
@@ -126,7 +144,6 @@ function getJSONAllMembers($PDOdbObject, $first, $last)
     $json=json_encode($rows);
     return $json;
 }
-
 
 //USED ON SIGNUP WIZARD PAGE STCG-VOL1.PHP
 //USED ON DATABASE ADMIN PAGE ORGANIZE-LATEST-EVENT-ACTIVITES-MEMBERS.PHP
@@ -1172,14 +1189,16 @@ function updateAllSelectedMembersAtActivity($PDOdbObject, $changedActId, $select
     }
     catch (PDOException $e)
     {
-        echo "There was a problem - rolling back this transaction.";
+        //echo "There was a problem - rolling back this transaction.";
+        alertMessage($e->getMessage(),SEV_DEBUG);
         //rollback transaction
         $PDOdbObject->rollBack();
-        echo $e->getMessage();
+        //echo $e->getMessage();
         return false;
     }
 }
 
+///make it possible for this to update flag for several members in one act.
 function updateSelectedFlagforEvent($PDOdbObject, $activityId, $memberId)
 {
     try
@@ -1497,8 +1516,10 @@ function insertMemberActivities($PDOdbObject, $memberId, $acts, $commentsIn)
         }
         catch (PDOException $e)
         {
-                echo "There was a problem inserting this member's activities.";
-                echo $e->getMessage();
+            //       echo "There was a problem inserting this member's activities.";
+            $msg = $e->getMessage();    
+            echo $msg;
+            //alertMessage($e->getMessage(),SEV_DEBUG);
         }
     }
 }
