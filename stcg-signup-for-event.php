@@ -76,7 +76,7 @@ $(document).ready(function ()
             {text: '#', datafield: 'activity_id', width: 40},
             {text: 'Act. Name', datafield: 'activity_name', width: 300},
             {text: 'Code', datafield: 'activity_short_code', width: 100},
-            {text: 'Date', datafield: 'date', width: 100},
+            {text: 'Date', datafield: 'date', width: 100}
           /*  {text: 'Status', datafield: 'open', width: 70}*/
          ]  
     });
@@ -140,7 +140,7 @@ function myCallback(response)
 	if ( response > 0)
 	{  
 		//alert("Thank you for your registration! / Merci de votre inscription!");
-		window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3292";
+		window.top.location="http://www.servethecitygeneva.ch/index.php?page_id=3292";
 	}
 }
 
@@ -151,14 +151,13 @@ function myCallbackError(response, jqXHR, settings, status)
 {
     if (isNaN(response))
     {    
-        //var sub = settings.toString();
-        //alert("settings " + sub + " stat " + status + " " + jqXHR + " response " + response.responseText);
         response = response.responseText;
-        var detail = response.substring(0,15);
-        if ( detail === "SQLSTATE[23000]")
+
+        var detail = response.substr(55,15);
+
+        if ( detail == "SQLSTATE[23000]")
         {
-            //alert("message " + detail);
-            window.top.location="https://www.servethecitygeneva.ch/index.php?page_id=3299";
+            window.top.location="http://www.servethecitygeneva.ch/index.php?page_id=3299";
         }
     }
 }   
@@ -180,14 +179,12 @@ function myCallbackError(response, jqXHR, settings, status)
             </div>
         </div>
         <div style="padding-top: 20px;"><input type="button" id="Send" value="Send" /></div>
-        <div class="result"></div>
-        <div class="log"></div>
     </div>
-    <h3>You may choose several mutually exclusive activities (that are on the same day at the same time).</h3>
+    <!--h3>You may choose several mutually exclusive activities (that are on the same day at the same time).</h3>
      <p>We will put you wherever the need is greatest. However, if you have a strong preference for one activity, note your preference in the Comments box.</p>
      
-     <h3 class="fre">Vous pouvez sÃ©lectionner plusieurs activitÃ©s mutuellement exclusives (c'est Ã  dire qui ont lieu le mÃªme jour Ã  la mÃªme heure.</h3>
-     <p class="fre">Nous vous affecterons lÃ  oÃ¹ le besoin est le plus grand. Cependant, si vous avez une forte prÃ©fÃ©rence pour une activitÃ©, inscrivez votre prÃ©fÃ©rence dans la case Commentaires.</p>
+     <h3 class="fre">Vous pouvez sélectionner plusieurs activités mutuellement exclusives (c'est à  dire qui ont lieu le même jour à la même heure.</h3>
+     <p class="fre">Nous vous affecterons là où le besoin est le plus grand. Cependant, si vous avez une forte préférence pour une activité, inscrivez votre préférence dans la case Commentaires.</p-->
      
 </body>
 </html>
