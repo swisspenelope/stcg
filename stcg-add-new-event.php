@@ -96,8 +96,8 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
             {text: 'Act. Name', datafield: 'activity_name', width: 260},
             {text: 'Act. Desc', datafield: 'activity_desc', width: 400},
             {text: 'Code', datafield: 'activity_short_code', width: 60},
-            {text: 'Cap.', datafield: 'capacity', width: 40},
-            {text: 'Date', datafield: 'date', columntype: 'datetimeinput', width: 140, cellsalign: 'right'},
+           /* {text: 'Cap.', datafield: 'capacity', width: 40},*/
+            {text: 'Date', datafield: 'date', columntype: 'datetimeinput', width: 100, cellsalign: 'right'},
             {text: 'PL', datafield: 'project_leader', width: 240},
           /*  {text: 'Open', datafield: 'open', width: 40}, */
             {text: 'Edit', datafield: 'Edit', columntype: 'button', cellsrenderer: function () 
