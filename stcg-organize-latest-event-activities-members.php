@@ -33,10 +33,11 @@ $(document).ready(function()
                         {name: 'name_first'},
                         {name: 'name_last'},
                         {name: 'email'},
-                        {name: 'phone'},
+                        {name: 'phone', type: 'string'},
                         {name: 'activity_short_code'},
                         {name: 'activity_name'},
                         {name: 'capacity'},
+                        {name: 'comments'},
                         {name: 'selected'}
                     ],
                     url: 'stcg-json-responses.php?fct=getJSONMembersAtEvent&eventId=<?php echo $_SESSION['eventId'] ?>',
@@ -49,104 +50,108 @@ $(document).ready(function()
         var adapter1 = new $.jqx.dataAdapter(data1);
 
         var columns = [
-            {text: '#', datafield: 'id', width: 50},
+         /*   {text: '#', datafield: 'id', width: 50},*/
             {text: 'First Name', datafield: 'name_first', width: 90},
             {text: 'Last Name', datafield: 'name_last', width: 130},
             {text: 'Email', datafield: 'email', width: 180},
             {text: 'Phone', datafield: 'phone', width: 110},
             {text: 'Code', datafield: 'activity_short_code', width: 50},
+            {text: 'Comments', datafield: 'comments', width: 200},
             {text: ' ', columntype: 'checkbox', datafield: 'selected', width: 30}
         ];
 
 //INITIALIZE GRID 1
         $("#jqxgrid1").jqxGrid(
-                {
-                    width: 660,
-                    height: 450,
-                    source: adapter1,
-                    sortable: true,
-                    theme: 'classic',
-                    selectionmode: 'singlerow',
-                    columns: columns,
+        {
+            width: 660,
+            height: 450,
+            source: adapter1,
+            sortable: true,
+            editable: false,
+            autorowheight: true,
+            autoheight: true,
+            theme: 'classic',
+            selectionmode: 'singlerow',
+            columns: columns,
 //rendering for drag-drop functionality
-                    rendered: function()
+            rendered: function()
+            {
+                // select all grid cells.
+                var gridCells = $('#jqxgrid1').find('.jqx-grid-cell');
+                if ($('#jqxgrid1').jqxGrid('groups').length > 0)
+                {
+                    gridCells = $('#jqxgrid1').find('.jqx-grid-group-cell');
+                }
+                // initialize the jqxDragDrop plug-in. Set its drop target to the second Grid.
+                gridCells.jqxDragDrop(
+                        {
+                            appendTo: 'body', theme: 'classic', dragZIndex: 99999,
+                            dropAction: 'none',
+                            initFeedback: function(feedback)
+                            {
+                                feedback.height(120);
+                                feedback.width(220);
+                            }
+                        });
+
+                // initialize the dragged object.
+                gridCells.off('dragStart');
+                gridCells.on('dragStart', function(event)
+                {
+                    var position = $.jqx.position(event.args);
+                    var cell = $("#jqxgrid1").jqxGrid('getcellatposition', position.left, position.top);
+
+                    $(this).jqxDragDrop('data', $("#jqxgrid1").jqxGrid('getrowdata', cell.row));
+                    //var value = $('#jqxgrid1').jqxGrid('getcellvaluebyid', id1, "activity_short_code");
+
+                    var groupslength = $('#jqxgrid1').jqxGrid('groups').length;
+
+                    // update feedback's display value.
+
+                    var feedback = $(this).jqxDragDrop('feedback');
+                    var feedbackContent = $(this).parent().clone();
+                    var table = '<table>';
+                    $.each(feedbackContent.children(), function(index)
                     {
-                        // select all grid cells.
-                        var gridCells = $('#jqxgrid1').find('.jqx-grid-cell');
-                        if ($('#jqxgrid1').jqxGrid('groups').length > 0)
+                        if (index < groupslength)
+                            return true;
+                        table += '<tr>';
+                        table += '<td>';
+                        table += columns[index - groupslength].text + ': ';
+                        table += '</td>';
+                        table += '<td>';
+                        table += $(this).text();
+                        table += '</td>';
+                        table += '</tr>';
+                    });
+                    table += '</table>';
+                    feedback.html(table);
+                });//end drag start
+
+                gridCells.off('dragEnd');
+                gridCells.on('dragEnd', function(event)
+                {
+                    var value = $(this).jqxDragDrop('data');
+                    var position = $.jqx.position(event.args);
+                    var pageX = position.left;
+                    var pageY = position.top;
+                    var $destination = $("#jqxgrid2");
+                    var targetX = $destination.offset().left;
+                    var targetY = $destination.offset().top;
+                    var width = $destination.width();
+                    var height = $destination.height();
+
+                    // fill the grid if the user dropped the dragged item over it.
+                    if (pageX >= targetX && pageX <= targetX + width)
+                    {
+                        if (pageY >= targetY && pageY <= targetY + height)
                         {
-                            gridCells = $('#jqxgrid1').find('.jqx-grid-group-cell');
+                            $destination.jqxGrid('addrow', null, value);
                         }
-                        // initialize the jqxDragDrop plug-in. Set its drop target to the second Grid.
-                        gridCells.jqxDragDrop(
-                                {
-                                    appendTo: 'body', theme: 'classic', dragZIndex: 99999,
-                                    dropAction: 'none',
-                                    initFeedback: function(feedback)
-                                    {
-                                        feedback.height(120);
-                                        feedback.width(220);
-                                    }
-                                });
-
-                        // initialize the dragged object.
-                        gridCells.off('dragStart');
-                        gridCells.on('dragStart', function(event)
-                        {
-                            var position = $.jqx.position(event.args);
-                            var cell = $("#jqxgrid1").jqxGrid('getcellatposition', position.left, position.top);
-
-                            $(this).jqxDragDrop('data', $("#jqxgrid1").jqxGrid('getrowdata', cell.row));
-                            //var value = $('#jqxgrid1').jqxGrid('getcellvaluebyid', id1, "activity_short_code");
-
-                            var groupslength = $('#jqxgrid1').jqxGrid('groups').length;
-
-                            // update feedback's display value.
-
-                            var feedback = $(this).jqxDragDrop('feedback');
-                            var feedbackContent = $(this).parent().clone();
-                            var table = '<table>';
-                            $.each(feedbackContent.children(), function(index)
-                            {
-                                if (index < groupslength)
-                                    return true;
-                                table += '<tr>';
-                                table += '<td>';
-                                table += columns[index - groupslength].text + ': ';
-                                table += '</td>';
-                                table += '<td>';
-                                table += $(this).text();
-                                table += '</td>';
-                                table += '</tr>';
-                            });
-                            table += '</table>';
-                            feedback.html(table);
-                        });//end drag start
-
-                        gridCells.off('dragEnd');
-                        gridCells.on('dragEnd', function(event)
-                        {
-                            var value = $(this).jqxDragDrop('data');
-                            var position = $.jqx.position(event.args);
-                            var pageX = position.left;
-                            var pageY = position.top;
-                            var $destination = $("#jqxgrid2");
-                            var targetX = $destination.offset().left;
-                            var targetY = $destination.offset().top;
-                            var width = $destination.width();
-                            var height = $destination.height();
-
-                            // fill the grid if the user dropped the dragged item over it.
-                            if (pageX >= targetX && pageX <= targetX + width)
-                            {
-                                if (pageY >= targetY && pageY <= targetY + height)
-                                {
-                                    $destination.jqxGrid('addrow', null, value);
-                                }
-                            }//end if
-                        });//end drag end
-                    }//end rendered function
-                });//end grid 1
+                    }//end if
+                });//end drag end
+            }//end rendered function
+        });//END GRID 1
 
         $("#excelExport").jqxButton(
                 {
@@ -192,7 +197,7 @@ $(document).ready(function()
                     theme: 'classic',
                     keyboardnavigation: false,
                     columns: [
-                        {text: '#', datafield: 'id', width: 40},
+                      /*  {text: '#', datafield: 'id', width: 40}, */
                         {text: 'First Name', datafield: 'name_first', width: 90},
                         {text: 'Last Name', datafield: 'name_last', width: 130},
                         {text: 'Email', datafield: 'email', width: 220},
@@ -321,6 +326,7 @@ $(document).ready(function()
                 {
                     data = data + "&memId[]=" + rowsInThisGrid[i]['id'];//actId=112&memId=4
                 }
+                
         //save to database in table member_activity_selected
         $.ajax({
             dataType: 'json',
@@ -328,6 +334,7 @@ $(document).ready(function()
             data: data,
             cache: false
         });
+
         updateFlagInGrid1(currentActId, rowsInThisGrid);
     }
     function updateFlagInGrid1(currentActId, rowsInThisGrid)
@@ -347,7 +354,6 @@ $(document).ready(function()
         //refresh the updated first grid
         $("#jqxgrid1").jqxGrid('updatebounddata');
     }
-
 </script>
 </HEAD>
 <BODY>
