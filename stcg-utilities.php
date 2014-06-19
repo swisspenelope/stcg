@@ -18,9 +18,9 @@ function alertMessage($message, $severity, $destination="stcg-error-messages.php
 		case SEV_DEBUG:
 		    if(!$obj)
 		    {
-	           error_log(print_r($obj));
+                        error_log(print_r($obj));
 		    }
-		        break;
+		    break;
 	}
 }
 
