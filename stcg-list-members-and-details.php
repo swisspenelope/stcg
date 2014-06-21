@@ -35,7 +35,7 @@ $(document).ready(function ()
             { name: 'language_id'},
             { name: 'location_id'}
         ],
-        url: 'stcg-json-responses.php?fct=getJSONAllMembers' + paramString,
+        url: 'stcg-json-responses.php?fct=getJSONSelectedMembers' + paramString,
         sortcolumn: 'id',
         sortdirection: 'desc',
         async: false
@@ -53,13 +53,14 @@ $(document).ready(function ()
     { text: 'Email', datafield: 'email', width: 200 },
     { text: 'Phone', datafield: 'phone', width: 120 },
     { text: 'Comments', datafield: 'comments', width: 300 },
-
-    { text: 'Language', datafield: 'language_id', width: 160 , cellsrenderer: function(row, columnfield, value, defaulthtml, columnproperties, rowdata)
+ /*   { text: 'Language', datafield: 'language_id', width: 160},
+    { text: 'Location', datafield: 'location_id', width: 160}*/
+    { text: 'Language', datafield: 'language_id', width: 160, cellsrenderer: function(row, columnfield, value, defaulthtml, columnproperties, rowdata)
         {
             return langNumToText(value);
         }
     },
-    { text: 'Location', datafield: 'location_id', width: 160 , cellsrenderer: function(row, columnfield, value, defaulthtml, columnproperties, rowdata)
+    { text: 'Location', datafield: 'location_id', width: 160, cellsrenderer: function(row, columnfield, value, defaulthtml, columnproperties, rowdata)
         {
             return locationNumToText(value);
         }
@@ -75,12 +76,10 @@ $(document).ready(function ()
         sortable: true,
         theme: 'classic',
         selectionmode: 'singlerow',
-        autorowheight: true,
-        autoheight: true,
+        rowsheight: 60,
         editable: true,
         columns: columns
     });//end grid
-    
 });    
 </script>
 </head>
