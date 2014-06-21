@@ -177,9 +177,15 @@ if (isset($_GET['fct']))
 	if ($_GET['fct'] == 'getJSONAllMembers')
 	{
             $result = getJSONAllMembers($connectionObject, $_GET['nameFirst'], $_GET['nameLast']);
-            //$result = getJSONAllMembers($connectionObject, "pen", "hac");
             echo $result;
 	}
+ //used for admin access to selected user accounts via login of admin and sub-admin
+        if ($_GET['fct'] == 'getJSONSelectedMembers')
+	{
+            $result =  getJSONSelectedMembers($connectionObject, $_GET['nameFirst'], $_GET['nameLast']);
+            echo $result;
+	}
+                    
 	if ($_GET['fct'] == 'getJSONMembersByInterest')
 	{
 			$result = getJSONMembersByInterest($connectionObject, $_GET['intId']);
