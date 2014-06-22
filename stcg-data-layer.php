@@ -979,14 +979,14 @@ function getJSONMembersByLanguage($PDOdbObject, $langId)
 
 /************************************************ UPDATES *********************************************************************************/
 
-//USED ON SIGNUP WIZARD PAGE STCG-VOL5-MEMBER-DETAILS-UPDATED.PHP AND EDITVOL5-EDITS VIA JSON-RESPONSES
-function updateThisMemberDetails($PDOdbObject, $source, $last, $first, $org, $email, $password, $phone, $lang, $loc, $memberIdIn)
+//USED ON STCG-EDIT-MEMBER-DETAILS PAGE FOR ADMINS ONLY, VIA JSON-RESPONSES
+function updateThisMemberDetails($PDOdbObject, $source, $last, $first, $org, $email, $phone, $comments, $lang, $loc, $memberIdIn)
 {
 	try
 	{
-		$updateMemberSQL = "UPDATE `member`, `member_location`, `member_language`
-		SET member.source=?, member.name_last=?, member.name_first=?, member.organization=?, member.email=?, member.password=?, member.phone=?, member_language.language_id=?, member_location.location_id=?
-		WHERE member.id = member_location.member_id AND member.id = member_language.member_id AND member.id = ?";
+		$updateMemberSQL = "UPDATE `member`
+		SET member.source=?, member.name_last=?, member.name_first=?, member.organization=?, member.email=?,                  member.phone=?, member.comments=?, member.language_id=?, member.location_id=?
+		WHERE member.id = ?";
 		$update = $PDOdbObject->prepare($updateMemberSQL);
 
 		$update->execute(array(
@@ -995,8 +995,8 @@ function updateThisMemberDetails($PDOdbObject, $source, $last, $first, $org, $em
 				$first,
 				$org,
 				$email,
-				$password,
 				$phone,
+                                $comments,
 				$lang,
 				$loc,
 				$memberIdIn
@@ -1008,7 +1008,7 @@ function updateThisMemberDetails($PDOdbObject, $source, $last, $first, $org, $em
 	catch(PDOException $e)
 	{
 		echo "There was a problem updating your details.";
-		echo $e->getMessage() . " updateMemberSQL";//SQLSTATE[HY093]: Invalid parameter number updateMemberSQL
+		echo $e->getMessage();
 	}
 }
 
