@@ -65,22 +65,31 @@ $(document).ready(function ()
             return locationNumToText(value);
         }
     }
-];
+    ];
 
 //INITIALIZE GRID 1
     $("#jqxgrid1").jqxGrid(
     {
         width: 1300,
-        height: 800,
+        //height: 800,
         source: adapter1,
         sortable: true,
         theme: 'classic',
         selectionmode: 'singlerow',
-        rowsheight: 60,
         editable: true,
+        //autorowheight: true,
+        autoheight: true,
         columns: columns
-    });//end grid
-});    
+    });
+    
+//EVENT HANDLERS
+    $('#jqxgrid1').on('rowselect', function(event)
+    {
+///////DO NOT DELETE! IT'S THE ONLY COMBO THAT WORKS!!!/////////////
+        var row = $("#jqxgrid1").jqxGrid('getrowdata', event.args.rowindex);
+    });    
+});//end document ready
+
 </script>
 </head>
 <body>
