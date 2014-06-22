@@ -200,7 +200,7 @@ if (isset($_GET['fct']))
 
 	if ($_GET['fct'] == 'updateThisMemberDetails')
 	{
-		$result = updateThisMemberDetails($connectionObject, $_GET['last'], $_GET['first'], $_GET['org'], $_GET['email'], do_crypt($_GET['pass']), $_GET['phone'], $_GET['source'], $_GET['comments'], $_GET['region'], $_GET['lang']);
+		$result = updateThisMemberDetails($connectionObject, $_GET['name_first'], $_GET['name_last'], $_GET['organization'], $_GET['email'], $_GET['phone'], $_GET['source'], $_GET['comments'], $_GET['language_id'], $_GET['location_id'], $_GET['id']);
 		echo $result;
 	}
 
