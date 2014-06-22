@@ -127,7 +127,7 @@ var thisEvent = <?php echo $_SESSION['eventId'] ?>;
                 }
             }
         ]  
-    });
+    });//end grid init
 // initialize the input fields.
     $("#activity_id").jqxInput({ theme: 'classic' });
     $("#activity_name").jqxInput({ theme: 'classic' });
