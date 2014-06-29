@@ -20,21 +20,25 @@ else
 <script type="text/javascript"> 
 $(document).ready(function () 
 {
-    var paramString = "&nameFirst=" + "<?php echo $_SESSION['first']?>" + "&nameLast=" + "<?php echo $_SESSION['last']?>";
+    $("#admin").click(function () {
+        window.location="stcg-vol2-authenticated.php";
+	});
+       
+        var paramString = "&nameLast=" + "<?php echo $_SESSION['last']?>" + "&nameFirst=" + "<?php echo $_SESSION['first']?>"; 
     var data1 =
     {
         datatype: "json",
         datafields: [
-            { name: 'id'},
-            { name: 'name_first'},
             { name: 'name_last'},
+            { name: 'name_first'},
             { name: 'organization'},
             { name: 'email'},
             { name: 'phone'},
             { name: 'source'},
             { name: 'comments'},
+            { name: 'location_id'},
             { name: 'language_id'},
-            { name: 'location_id'}
+            { name: 'id'}
         ],
         url: 'stcg-json-responses.php?fct=getJSONSelectedMembers' + paramString,
         sortcolumn: 'id',
@@ -44,8 +48,8 @@ $(document).ready(function ()
         ////////////// THIS IS THE UPDATE / ADD ROW THAT HAS TO BE CALLED /////////
         updaterow: function (rowid, rowdata, commit) 
         {
-            //update table member
-                var data = "name_first=" + rowdata.name_first + "&name_last=" + rowdata.name_last + "&organization=" + rowdata.organization + "&email=" + rowdata.email + "&phone=" + rowdata.phone + "&source=" + rowdata.source+ "&comments=" + rowdata.comments + "&language_id=" + rowdata.language_id + "&location_id=" + rowdata.location_id;            
+                var data = "name_last=" + rowdata.name_last + "&name_first=" + rowdata.name_first + "&organization=" + rowdata.organization + "&email=" + rowdata.email + "&phone=" + rowdata.phone + "&source=" + rowdata.source + "&comments=" + rowdata.comments + "&location_id=" + rowdata.location_id + "&language_id=" + rowdata.language_id;        
+               
                $.ajax({
                dataType: 'json',
                url: 'stcg-json-responses.php?fct=updateThisMemberDetails&id=' + rowdata.id,
@@ -121,8 +125,6 @@ $(document).ready(function ()
     {
 ///////DO NOT DELETE! IT'S THE ONLY COMBO THAT WORKS!!!/////////////
         var row = $("#jqxgrid1").jqxGrid('getrowdata', event.args.rowindex);
-        alert(row.id + " " + row.name_last);
-        //DISPLAY THE USER ACCOUNT PAGE OF THIS USER ID
     });
 
 });//end document ready
@@ -131,7 +133,7 @@ $(document).ready(function ()
 </head>
 <body>
 <h3>Members</h3>
-<input type="button" id="admin" value="Back to Admin Menu">
+<input type="button" id="admin" value="Back to Change Another Member">
 <fieldset style = "border: solid #aaaaaa 1px; width: 90%; padding: 20px; padding-top: 20px;">
 <div style="float: left;" id = "jqxgrid1">
 </div>	
