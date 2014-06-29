@@ -18,9 +18,7 @@ else
 	//print_r($JSONactHistory);
 	?>
 	</pre>
-<HTML>
-<HEAD>
-<TITLE>Member Activity History</TITLE>
+<title>Member Activity History</title>
 <script type="text/javascript"> 
 $(document).ready(function () 
 {
@@ -33,16 +31,25 @@ $(document).ready(function ()
     });
 });
 </script>
-</HEAD>
-<BODY>
+</head>
+<body>
+    <pre>
 <?php 
 /********************* CALL GET MEMBER AND GET ALL ACTIVITIES FUNCTIONS ******************/
 $connectionObject = connect();
 $actHistory = getJSONMembersAndPastActivities($connectionObject, $memberLast, $memberFirst);
 
 /****************************************************************************************/	
-
+//var_dump($actHistory);//JSON returns an array of objects [  {}, {}, {} ]
+?>
+</pre>
+    <pre>
+    <?php
 $JSONactHistory = json_decode($actHistory, true);
+//var_dump($JSONactHistory);
+?>
+</pre>
+<?php
 
 $msg ="";
 if ($memberFirst == "")
@@ -58,7 +65,7 @@ if (!empty($JSONactHistory))
 	{
 		$textToPass = $value['name_first'] . " " . $value['name_last'] . ", " . $value['name'] . ", " . $value['activity_short_code'] . " " . $value['activity_name'];
 		
-		echo "<DIV><INPUT TYPE='text' VALUE='$textToPass'NAME='activityDetails' SIZE='150px' DISABLED></DIV>";
+		echo "<div><input type='text' value='$textToPass'name='activitydetails' size='150px' disabled></div>";
 	} 
 }
 else
@@ -66,11 +73,15 @@ else
 	$msg = "There is no history of past Events for search terms: " . $memberFirst . " and " . $memberLast . ".";
 }
 ?>
-
-<H3><?php echo $msg; ?></H3>
-<BR /><BR />
-<INPUT TYPE="BUTTON" ID="back" VALUE="Back"></INPUT>
-<BR /><BR />
-<INPUT TYPE="BUTTON" ID="admin" VALUE="Back to Admin Menu"></INPUT>
-</BODY>
-</HTML>
+    <fieldset style = "border: solid #AAAAAA 1px; width: 90%; padding: 20px; padding-top: 20px;">
+<div style="FLOAT: LEFT;" id = jqxgrid1></div>	
+</fieldset>
+<h3><?php echo $msg; ?></h3>
+<br /><br />
+<input type="button" id="back" value="Back">
+<br /><br />
+<input type="button" id="admin" value="Back to Admin Menu">
+</body>
+<?php
+include_once 'footer.php';
+?>
