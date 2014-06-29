@@ -1,4 +1,11 @@
 <?php
+
+/**
+ * Depends on: stcg-config.php, stcg-admin-access.php, stcg-vol1-login.php,
+ * stcg-vol2-authenticated.php, stcg-json-responses.php, stcg-data-layer.php,
+ * stcg-utilities.php, scripts/utils.js
+ * 
+ *  */
 require_once 'header.php';
 
 if (!$_POST['lastName']) 
@@ -20,9 +27,24 @@ else
 <script type="text/javascript"> 
 $(document).ready(function () 
 {
-    $("#admin").click(function () {
+    $("#admin").click(function () 
+    {
         window.location="stcg-vol2-authenticated.php";
-	});
+    });
+        
+    $("#logout").click(function ()
+    {
+        $.ajax({
+        type: "GET",
+        url: "stcg-json-responses.php?fct=endSession",
+        //data: dataString,
+        success: function(response)
+        {
+            //alert("session destroyed on exit");
+            top.location.href="http://www.servethecitygeneva.ch";
+        }
+        });
+    });
        
         var paramString = "&nameLast=" + "<?php echo $_SESSION['last']?>" + "&nameFirst=" + "<?php echo $_SESSION['first']?>"; 
     var data1 =
@@ -134,6 +156,7 @@ $(document).ready(function ()
 <body>
 <h3>Members</h3>
 <input type="button" id="admin" value="Back to Change Another Member">
+<input type="button" id="logout" value="Log Out">
 <fieldset style = "border: solid #aaaaaa 1px; width: 90%; padding: 20px; padding-top: 20px;">
 <div style="float: left;" id = "jqxgrid1">
 </div>	
