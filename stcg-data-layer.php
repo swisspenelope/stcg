@@ -97,25 +97,8 @@ function getAllInterestsButUnknown($PDOdbObject)
     }
     return $rows;
 }
-//change only on local for now!!!!!!!!!!!
+
 //USED IN LIST-ALL-MEMBERS VIA JSON-RESPONSES
-function findJSONMemberToAdminister($PDOdbObject, $first, $last)
-{
-	try
-	{
-		$getAllMembersSQL = "SELECT `id`,`name_first`,`name_last`,`organization`,`email`,`active`,`phone`,`comments`, `location_id`, `language_id` FROM `member` WHERE `active` = 1 ORDER BY `id`";
-		$get = $PDOdbObject->query($getAllMembersSQL);
-		$rows = $get->fetchAll(PDO::FETCH_ASSOC);
-		$json=json_encode($rows);
-	}
-	catch (PDOException $e)
-	{
-		echo "There was a problem getting all the members.";
-		echo $e->getMessage();
-	}
-	return $json;
-}
-//USED already IN LIST-ALL-MEMBERS VIA JSON-RESPONSES
 function getJSONAllMembers($PDOdbObject)
 {
 	try
