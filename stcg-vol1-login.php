@@ -40,7 +40,7 @@ $(document).ready(function ()
 		success: function(response)
 		{
 			//alert("session destroyed on exit");
-			top.location.href="https://www.servethecitygeneva.ch";
+			top.location.href="http://www.servethecitygeneva.ch";
 		}
 		});
 	});
