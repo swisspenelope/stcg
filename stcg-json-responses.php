@@ -176,8 +176,8 @@ if (isset($_GET['fct']))
 	}
 	if ($_GET['fct'] == 'getJSONAllMembers')
 	{
-            $result = getJSONAllMembers($connectionObject, $_GET['nameFirst'], $_GET['nameLast']);
-            echo $result;
+		$result = getJSONAllMembers($connectionObject);
+		echo $result;
 	}
  //used for admin access to selected user accounts via login of admin and sub-admin
         if ($_GET['fct'] == 'getJSONSelectedMembers')
