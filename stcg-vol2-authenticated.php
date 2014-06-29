@@ -59,7 +59,7 @@ $(document).ready(function ()
                 success: function(response)
                 {
                         //alert("session destroyed on exit");
-                        top.location.href="https://www.servethecitygeneva.ch";
+                        top.location.href="http://www.servethecitygeneva.ch";
                 }
         });
     });
@@ -108,15 +108,13 @@ $_SESSION['stringInts'] = makeInterestStringFromArray($ints);
         echo "Some weird error occurred.";//ask JD what might trigger this to happen, if anything...
     }
 ?>
-</-- TAKE THIS OUT AFTER EVENT --/>
-    <div style="width: 92%; padding: 20px; padding-top: 5px; clear: both;">
-        Click this button to go straight to the signup page for our latest Event <input type="button" id="signup" value="Signup to Event" />
-    </div>
 <?php
 /*****************************************************************************************/
 //form that displays member's current personal data from db and leads to edit data forms
 ?>
-        
+    <div style="width: 92%; padding: 20px; padding-top: 5px; clear: both;">
+        Click this button to go straight to the signup page for our latest Event <input type="button" id="signup" value="Signup to Event" />
+    </div>    
 	<form name="change_contact" method="post" action="stcg-vol3-edit-contact.php">
 		<fieldset style = "border: solid black 1px; width: 92%; padding: 20px; padding-top: 20px">
 			<legend>&nbsp;<span class = "eng"><b>Your contact details</b></span>&nbsp;/&nbsp;<span class = "fre"><b>Vos coordonnées</b></span>&nbsp;</legend>
