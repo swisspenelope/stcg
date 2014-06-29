@@ -137,7 +137,7 @@ function getJSONSelectedMembers($PDOdbObject, $first, $last)
 {
     try
     {
-        $allMembersSQL = "SELECT `id`,`name_first`,`name_last`,`organization`,`email`,`active`,`phone`,`comments`, `location_id`, `language_id` FROM `member` WHERE `active` = 1 AND member.name_first LIKE :first AND member.name_last LIKE :last";
+        $allMembersSQL = "SELECT `id`, `name_first`, `name_last`, `organization`,`email`, `phone`,`source`,`comments`, `language_id`, `location_id` FROM `member` WHERE `active` = 1 AND member.name_first LIKE :first AND member.name_last LIKE :last";
         $getMatches = $PDOdbObject->prepare($allMembersSQL);
         //$params = array("%$first%", "%$last%");
         
@@ -980,25 +980,25 @@ function getJSONMembersByLanguage($PDOdbObject, $langId)
 /************************************************ UPDATES *********************************************************************************/
 
 //USED ON STCG-EDIT-MEMBER-DETAILS PAGE FOR ADMINS ONLY, VIA JSON-RESPONSES
-function updateThisMemberDetails($PDOdbObject, $source, $last, $first, $org, $email, $phone, $comments, $lang, $loc, $memberIdIn)
+function updateThisMemberDetails($PDOdbObject, $last, $first, $org, $email, $phone, $source, $comments, $loc, $lang, $memberIdIn)
 {
 	try
 	{
 		$updateMemberSQL = "UPDATE `member`
-		SET member.source=?, member.name_last=?, member.name_first=?, member.organization=?, member.email=?,                  member.phone=?, member.comments=?, member.language_id=?, member.location_id=?
+		SET member.name_last=?, member.name_first=?, member.organization=?, member.email=?,                  member.phone=?, member.source=?, member.comments=?, member.location_id=?, member.language_id=?   
 		WHERE member.id = ?";
 		$update = $PDOdbObject->prepare($updateMemberSQL);
 
 		$update->execute(array(
-				$source,
 				$last,
 				$first,
 				$org,
 				$email,
 				$phone,
+                                $source,
                                 $comments,
-				$lang,
 				$loc,
+                                $lang,
 				$memberIdIn
 		));
 
