@@ -26,5 +26,11 @@ require_once 'header.php';
 	<p><a href="stcg-organize-latest-event-activities-members.php">Organize signups at latest Event</a></p>
         </fieldset> 
     </div>
+    <br /><br />
+    <div>
+        <fieldset style = "border: solid black 1px; width: 40%; padding: 20px; padding-top: 20px">
+	<p><a href="stcg-vol1-login.php">Change a member's personal details in database (Gary only)</a></p>
+        </fieldset> 
+    </div>
 </form>
 </body>
