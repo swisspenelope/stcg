@@ -45,6 +45,11 @@ $(document).ready(function ()
         }
         });
     });
+ 
+    //update initializer
+    $("#reply").css("font-weight", "bold");
+    $("#reply").css("font-size", "20px");
+    $('#reply').text('');
        
         var paramString = "&nameLast=" + "<?php echo $_SESSION['last']?>" + "&nameFirst=" + "<?php echo $_SESSION['first']?>"; 
     var data1 =
@@ -132,10 +137,14 @@ $(document).ready(function ()
         if (response > 0)
         {
             $('#jqxgrid1').jqxGrid('updatebounddata');
+            $("#reply").css("color", "green");
+            $('#reply').text('Update accepted!');
         }
         else 
         {
-            alert("No update could be done! Unknown error in data layer.");
+            $('#jqxgrid1').jqxGrid('updatebounddata');
+            $("#reply").css("color", "red");
+            $('#reply').text('This update to the database was not allowed!');
         }
     }
     function myCallbackError(jqXHR, textStatus, errorThrown )//ajax call returns any kind of error
@@ -157,10 +166,12 @@ $(document).ready(function ()
 <h3>Members</h3>
 <input type="button" id="admin" value="Back to Change Another Member">
 <input type="button" id="logout" value="Log Out">
+
 <fieldset style = "border: solid #aaaaaa 1px; width: 90%; padding: 20px; padding-top: 20px;">
 <div style="float: left;" id = "jqxgrid1">
-</div>	
+</div>
 </fieldset>
+<div style="padding-top: 20px;" id="reply">&nbsp;</div>
 </body>
 <?php
     include_once 'footer.php';
