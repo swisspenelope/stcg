@@ -4,8 +4,8 @@ $today = date("d M Y");
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<HTML>
-<HEAD>
+<html>
+<head>
 <script type="text/javascript"> 
 $(document).ready(function () 
 {
@@ -27,7 +27,7 @@ $(document).ready(function ()
 		{ name: 'name_last'},
 		{ name: 'organization'},
 		{ name: 'email'},
-		{ name: 'phone'},
+		{ name: 'phone', type: 'string'},
 		{ name: 'comments'}
 		],
         url: 'stcg-json-responses.php?fct=getJSONAllMembers',
@@ -45,8 +45,8 @@ $(document).ready(function ()
     	  	      { text: 'Last Name', datafield: 'name_last', width: 110 },
     	  	      { text: 'Organization', datafield: 'organization', width: 120 },
       	  	      { text: 'Email', datafield: 'email', width: 200 },
-          	  	  { text: 'Phone', datafield: 'phone', width: 120 },
-              	  { text: 'Comments', datafield: 'comments', width: 600 }
+                      { text: 'Phone', datafield: 'phone', width: 120 },
+                      { text: 'Comments', datafield: 'comments', width: 600 }
     	  	      ];
 
     //INITIALIZE GRID 1
@@ -61,16 +61,25 @@ $(document).ready(function ()
     	        editable: true,
     	        columns: columns
     	    });//end data source
-});    
+            $("#excelExport").jqxButton(
+                {
+                    theme: 'energyblue'
+                });
+
+        $("#excelExport").click(function()
+        {
+            $("#jqxgrid1").jqxGrid('exportdata', 'xls', 'jqxGrid');
+        });
+});//end document ready    
 </script>
-</HEAD>
-<BODY>
-<H3>List of all Members <?php echo $today; ?></H3>
-<P>(Hover your mouse pointer over a column heading, then click the arrow to sort in order of that column.)</P>
-<INPUT TYPE="BUTTON" ID="admin" VALUE="Back to Admin Menu"></INPUT>
-<fieldset style = "border: solid #AAAAAA 1px; width: 90%; padding: 20px; padding-top: 20px;">
-<DIV style="FLOAT: LEFT;" id = jqxgrid1>
-</DIV>	
+</head>
+<body>
+<h3>List of all Members <?php echo $today; ?></h3>
+<p>(Hover your mouse pointer over a column heading, then click the arrow to sort in order of that column.)</p>
+<input type="button" id="admin" value="Back to Admin Menu"></input>
+<input style='margin-top: 10px; margin-bottom: 10px;' type="button" value="Export to Excel" id='excelExport' />
+<fieldset style = "border: solid #aaaaaa 1px; width: 90%; padding: 20px; padding-top: 20px;">
+    <div style="float: left;" id = jqxgrid1></div>	
 </fieldset>
-</BODY>
-</HTML>
+</body>
+</html>
