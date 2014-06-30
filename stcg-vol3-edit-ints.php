@@ -124,7 +124,7 @@ function updateThisMemberInts()//sends an array
 <!-- /****************************************************************************************/ -->
 <FORM NAME="CHANGE_VOL_INTS" ID="CHANGE_VOL_INTS" METHOD="POST" ACTION="non-Ajax form handler">
 	<FIELDSET style ="border: solid black 1px; width: 92%; padding: 20px; padding-top: 20px">
-		<LEGEND>&nbsp;<SPAN CLASS = "eng"><B>Interests</SPAN>&nbsp;/&nbsp;<SPAN CLASS = "fre">Intérêts</B></SPAN>&nbsp;</LEGEND>
+		<LEGEND><B>&nbsp;<SPAN CLASS = "eng">Interests</SPAN>&nbsp;/&nbsp;<SPAN CLASS = "fre">Intérêts</SPAN>&nbsp;</B></LEGEND>
 		<TABLE>
 			<TR><!--ROW 1 TITLE-->
 				<TD COLSPAN="4">&nbsp;*&nbsp;<SPAN CLASS = "eng">
@@ -138,7 +138,7 @@ function updateThisMemberInts()//sends an array
 			</TR>
 			<TR><!--ROW 2 DETAILS-->
 				<TD><!--COL 1 EXISTING INTERESTS-->
-					<SELECT style="width: 200px;" MULTIPLE DISABLED name="interests[]" size="<?php echo $numSelected; ?>">
+					<SELECT style="width: 200px; size: <?php echo $numSelected; ?>" MULTIPLE DISABLED name="interests[]">
 					<?php for($i = 0; $i < $numSelected; $i++)
 					{
 					?>
@@ -155,8 +155,8 @@ function updateThisMemberInts()//sends an array
 						{
 					?>
 					<TR>
-						<TD STYLE="80%"><LABEL for="interests"><?php echo interestNumToText($value['interest_id']); ?></LABEL></TD>
-						<TD STYLE="20%"><INPUT TYPE="CHECKBOX" NAME="ints" ID="ints" VALUE="<?php echo $value['interest_id']; ?>"></TD>
+						<TD STYLE="width: 80%;"><LABEL for="interests"><?php echo interestNumToText($value['interest_id']); ?></LABEL></TD>
+						<TD STYLE="width: 20%;"><INPUT TYPE="CHECKBOX" NAME="ints" ID="ints" VALUE="<?php echo $value['interest_id']; ?>"></TD>
 					</TR>
 					<?php
 						//End loop through interests
