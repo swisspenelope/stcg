@@ -3,7 +3,7 @@ require_once 'header.php';
 
 if (!$_POST['lastName']) 
 {
-    header("location: stcg-admin-access.php");
+    header("location: stcg-input-member-to-find-details.php");
     exit;
 }
 else
@@ -20,6 +20,11 @@ else
 <script type="text/javascript"> 
 $(document).ready(function () 
 {
+    $("#admin").click(function () 
+    {
+        window.location="/stcg/site/stcg-admin-menu.php";
+    });
+    
     var paramString = "&nameFirst=" + "<?php echo $_SESSION['first']?>" + "&nameLast=" + "<?php echo $_SESSION['last']?>";
     var data1 =
     {
@@ -93,7 +98,8 @@ $(document).ready(function ()
 </script>
 </head>
 <body>
-<h3>Members</h3>
+<h2>Members</h2>
+<p>Searching for: <?php echo $_SESSION['first'] . " " . $_SESSION['last']?></p>
 <input type="button" id="admin" value="Back to Admin Menu">
 <fieldset style = "border: solid #aaaaaa 1px; width: 90%; padding: 20px; padding-top: 20px;">
 <div style="float: left;" id = "jqxgrid1">
