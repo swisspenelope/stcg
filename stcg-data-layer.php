@@ -1515,10 +1515,8 @@ function insertMemberActivities($PDOdbObject, $memberId, $acts, $commentsIn)
         }
         catch (PDOException $e)
         {
-            //       echo "There was a problem inserting this member's activities.";
-            $msg = $e->getMessage();    
-            echo $msg;
-            //alertMessage($e->getMessage(),SEV_DEBUG);
+                echo "There was a problem inserting this member's activities.";
+                echo $e->getMessage();
         }
     }
 }
