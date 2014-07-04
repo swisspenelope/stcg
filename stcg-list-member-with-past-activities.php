@@ -8,78 +8,75 @@ if (!$_POST['lastName'])
 }
 else
 {
-	$memberLast = $_POST['lastName'];
+	$_SESSION['last'] = $_POST['lastName'];
 	if (isset ($_POST['firstName']))
-		$memberFirst = $_POST['firstName'];
+            $_SESSION['first'] = $_POST['firstName'];
 }
 ?>
-	<pre>
-	<?php
-	//print_r($JSONactHistory);
-	?>
-	</pre>
 <title>Member Activity History</title>
 <script type="text/javascript"> 
 $(document).ready(function () 
 {
-	$("#back").click(function () {
-        window.location="/stcg/site/stcg-input-member-to-find-history.php";
+    $("#back").click(function () 
+    {
+        window.location="stcg-input-member-to-find-history.php";
     });
 	
-	$("#admin").click(function () {
-        window.location="/stcg/site/stcg-admin-menu.php";
+    $("#admin").click(function () 
+    {
+        window.location="stcg-admin-menu.php";
+    });
+    
+    var paramString = "&nameLast=" + "<?php echo $_SESSION['last']?>" + "&nameFirst=" + "<?php echo $_SESSION['first']?>"; 
+    var data =
+    {
+        datatype: "json",
+        datafields: [
+        { name: 'name_last'},
+        { name: 'name_first'},
+        { name: 'activity_id'},
+        { name: 'activity_name'},
+        { name: 'activity_short_code'}
+        ],
+        url: 'stcg-json-responses.php?fct=getJSONMembersAndPastActivities' + paramString,
+        sortcolumn: 'name_last',
+        sortdirection: 'asc',
+        async: false
+     }//end data source
+     
+     var adapter = new $.jqx.dataAdapter(data);
+     
+     var columns = [
+        { text: 'Last Name', datafield: 'name_last', width: 200 },
+        { text: 'First Name', datafield: 'name_first', width: 110 },
+        { text: 'Act. #', datafield: 'activity_id', width: 50 },
+        { text: 'Activity', datafield: 'activity_name', width: 400 },
+        { text: 'Short Code', datafield: 'activity_short_code', width: 90 }
+     ];
+     
+     //INITIALIZE GRID
+    $("#jqxgrid").jqxGrid(
+    {
+        width: 850,
+        //height: 800,
+        source: adapter,
+        sortable: true,
+        theme: 'classic',
+        selectionmode: 'singlerow',
+        editable: true,
+        //autorowheight: true,
+        autoheight: true,
+        columns: columns
     });
 });
 </script>
 </head>
 <body>
-    <pre>
-<?php 
-/********************* CALL GET MEMBER AND GET ALL ACTIVITIES FUNCTIONS ******************/
-$connectionObject = connect();
-$actHistory = getJSONMembersAndPastActivities($connectionObject, $memberLast, $memberFirst);
-
-/****************************************************************************************/	
-//var_dump($actHistory);//JSON returns an array of objects [  {}, {}, {} ]
-?>
-</pre>
-    <pre>
-    <?php
-$JSONactHistory = json_decode($actHistory, true);
-//var_dump($JSONactHistory);
-?>
-</pre>
-<?php
-
-$msg ="";
-if ($memberFirst == "")
-	$memberFirst = "Nothing";
-
-if ($memberLast == "")
-	$memberLast = "Nothing";
-
-if (!empty($JSONactHistory))
-{
-	echo "<H3>List of previous Events/Activities for your search items: " . $memberFirst . " and " . $memberLast . "</H3>";
-	foreach ($JSONactHistory as $value)
-	{
-		$textToPass = $value['name_first'] . " " . $value['name_last'] . ", " . $value['name'] . ", " . $value['activity_short_code'] . " " . $value['activity_name'];
-		
-		echo "<div><input type='text' value='$textToPass'name='activitydetails' size='150px' disabled></div>";
-	} 
-}
-else
-{
-	$msg = "There is no history of past Events for search terms: " . $memberFirst . " and " . $memberLast . ".";
-}
-?>
-    <fieldset style = "border: solid #AAAAAA 1px; width: 90%; padding: 20px; padding-top: 20px;">
-<div style="FLOAT: LEFT;" id = jqxgrid1></div>	
+<h2>Member's past activities</h2>
+<fieldset style = "border: solid #aaaaaa 1px; width: 90%; padding: 20px; padding-top: 20px;">
+<div style="float: left;" id = "jqxgrid"></div>
 </fieldset>
-<h3><?php echo $msg; ?></h3>
-<br /><br />
-<input type="button" id="back" value="Back">
-<br /><br />
+<input type="button" id="back" value="Back to Member Search">
 <input type="button" id="admin" value="Back to Admin Menu">
 </body>
 <?php
