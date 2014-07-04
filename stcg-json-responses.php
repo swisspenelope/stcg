@@ -185,6 +185,12 @@ if (isset($_GET['fct']))
             $result =  getJSONSelectedMembers($connectionObject, $_GET['nameFirst'], $_GET['nameLast']);
             echo $result;
 	}
+        
+        if ($_GET['fct'] == 'getJSONMembersAndPastActivities')
+	{
+            $result =  getJSONMembersAndPastActivities($connectionObject, $_GET['nameLast'], $_GET['nameFirst']);
+            echo $result;
+	}
                     
 	if ($_GET['fct'] == 'getJSONMembersByInterest')
 	{
