@@ -1,11 +1,6 @@
 <?php
 include_once 'header.php';
 ?>
-
-<script src="scripts/custom.js" type="text/javascript">
-
-</script>
-
 <body>
 <form Id="EVENT_ID" method="post" action="stcg-list-member-with-past-activities.php">
 <h3>To list all the Activities a member has taken part in, use the name search below:</h3>
