@@ -653,7 +653,7 @@ function getJSONMembersAndPastActivities ($PDOdbObject, $memberLastName, $member
 		AND member.name_first LIKE ?
 		ORDER BY activity.activity_id DESC";
 
-		$params = array("%$memberLastName%", "%$memberFirstName%");
+		$params = array("$memberLastName%", "$memberFirstName%");
 		$get = $PDOdbObject->prepare($membersPastActivitiesSQL);//prepare also returns PDO object
 		$get->execute($params);
 
