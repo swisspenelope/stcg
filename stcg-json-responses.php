@@ -105,9 +105,8 @@ if (isset($_GET['fct']))
 			$volSubject = "Your registration as a volunteer / Votre inscription comme bénévole";//tell volunteer what the subject is
 			$volAckString = "<p>Your registration with Serve The City Geneva has been successful! <br /><br/>We look forward to seeing you at our next Event. / <span class='fre'>Votre inscription à Serve The City Geneva a été effectué. <br /><br/>Nous nous réjouissons de vous rencontrer lors de notre action prochaine.</span></p>";
 
-			//orgTo = 'EMAIL_ORG'. ', ' ;// note the comma
-			//$orgTo = 'gvannatter@aol.com';
-			$orgTo = ', ' . 'swisspenelope@gmail.com';
+			$orgTo = 'gvannatter@aol.com' . ', swisspenelope@gmail.com';
+			//$orgTo = 'EMAIL_ORG';
 			$orgSubject = 'New registration with STCG / Nouvelle inscription chez STCG';
 			$volNameString = $_GET['first'] . " " . $_GET['last'] . " has registered as a volunteer.<br /><br />";//for organizer to know who volunteered
 			$volDetailsString = "<b>How you found STCG:&nbsp;&nbsp;</b>" . $_GET['source'] . "<br /><br />
