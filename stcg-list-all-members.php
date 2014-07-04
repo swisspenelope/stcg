@@ -3,13 +3,11 @@ include_once 'header.php';
 $today = date("d M Y");
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-<head>
 <script type="text/javascript"> 
 $(document).ready(function () 
 {
-	$("#admin").click(function () {
+    $("#admin").click(function () 
+    {
         window.location="/stcg/site/stcg-admin-menu.php";
     });
 });
