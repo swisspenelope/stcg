@@ -81,7 +81,7 @@ $(document).ready(function ()
         sortable: true,
         theme: 'classic',
         selectionmode: 'singlerow',
-        editable: true,
+        editable: false,
         //autorowheight: true,
         autoheight: true,
         columns: columns
