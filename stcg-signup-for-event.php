@@ -64,7 +64,7 @@ $(document).ready(function ()
  // initialize jqxGrid
     $("#jqxgrid").jqxGrid(
     {
-        width: 580,
+        width: 605,
         source: data,
         sortable: true,
         pageable: false,
@@ -73,9 +73,10 @@ $(document).ready(function ()
         autoheight: true,
         columns:  
         [
-            {text: '#', datafield: 'activity_id', width: 40},
-            {text: 'Act. Name', datafield: 'activity_name', width: 300},
-            {text: 'Code', datafield: 'activity_short_code', width: 100},
+           {text: '', datafield: 'activity_id', width: 40},
+         /*   {text: 'Act. Name', datafield: 'activity_name', width: 300},*/
+		{text: '', datafield: 'activity_desc', width: 450},
+        /*    {text: 'Code', datafield: 'activity_short_code', width: 100},*/
             {text: 'Date', datafield: 'date', width: 100}
           /*  {text: 'Status', datafield: 'open', width: 70}*/
          ]  
@@ -165,8 +166,8 @@ function myCallbackError(response, jqXHR, settings, status)
 </head>
 <body>
      <h2>Sign up for this Event: <?php echo $event['name'] ?></h2>
-     <h2 class="fre">Inscrivez-vous pour l'action Collecte alimentaire "Partage"</h2>
- 
+     <h2 class="fre">Journée Mandela</h2>
+
     <div id='jqxWidget'>
         <div id='jqxgrid' style="margin-bottom: 20px;"></div>
         <div style="width: 92%; padding: 20px; padding-top: 10px">
