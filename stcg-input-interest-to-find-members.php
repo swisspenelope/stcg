@@ -7,32 +7,31 @@ $allInterests = getAllInterests($connectionObject);
 
 /****************************************************************************************/
 ?>
-<HTML>
-<HEAD>
-<TITLE>Enter interest to find members</TITLE>
-</HEAD>
-<BODY>
-<FORM ID="INTEREST_ID" METHOD="POST" ACTION="stcg-list-interest-shared-by-all-members.php">
-<H3>Select one from the list of interests below:</H3>
+<title>Enter interest to find members</title>
+</head>
+<body>
+<form id="interest_id" method="POST" action="stcg-list-interest-shared-by-all-members.php">
+<h3>Select one from the list of interests below:</h3>
 
-<TABLE STYLE="font-size: 12px; WIDTH: 50%;">
+<table style="font-size: 12px; width: 50%;">
 <!-- 1..7 interests allowed -->
 <?php 
 	foreach ($allInterests as $value)
 	{
 ?>
-<TR>
-<TD style="width: 5%;"><INPUT TYPE="RADIO" NAME="interests" ID="<?php echo $value['interest_id']; ?>" VALUE="<?php echo $value['interest_id']; ?>"></TD>
-<TD style="width: 50%;"><LABEL for="interests"><?php echo interestNumToText($value['interest_id']); ?></LABEL></TD>
-</TR>
+<tr>
+<td style="width: 5%;"><input type="radio" name="interests" id="<?php echo $value['interest_id']; ?>" value="<?php echo $value['interest_id']; ?>"></td>
+<td style="width: 50%;"><label for="interests"><?php echo interestNumToText($value['interest_id']); ?></label></td>
+</tr>
 <?php
 //End loop through interests 
 	}
 ?>
-</TABLE>
-<DIV>
-<BR /><BR />
-<INPUT TYPE="SUBMIT" VALUE="Continue"></DIV>
-</FORM>
-</BODY>
-</HTML>
+</table>
+<div>
+<br /><br />
+<input type="submit" value="Continue"></div>
+</form>
+<?php
+    include_once 'footer.php';
+?>
