@@ -15,6 +15,12 @@ if (isset($_GET['fct']))
 		$result = true;
 	}
 
+        if ($_GET['fct'] == 'getJSONAllEventDetails')
+	{
+            $result = getJSONAllEventDetails($connectionObject);
+            echo $result;
+        }
+        
 	//call get members at event - used in Signups received grid on left
 	if ($_GET['fct'] == 'getJSONMembersAtEvent')
 	{
@@ -170,9 +176,16 @@ if (isset($_GET['fct']))
 
 	if ($_GET['fct'] == 'getJSONAllActivitiesAtEvent')
 	{
-		$result = getJSONAllActivitiesAtEvent($connectionObject, $_GET['eventId']);
-		echo $result;
+            $result = getJSONAllActivitiesAtEvent($connectionObject, $_GET['eventId']);
+            echo $result;
 	}
+        
+        if ($_GET['fct'] == 'getJSONAllOpenActivitiesAtEvent')
+        {
+            $result = getJSONAllOpenActivitiesAtEvent($connectionObject, $_GET['eventId']);
+            echo $result;
+	}
+            
 	if ($_GET['fct'] == 'getJSONAllMembers')
 	{
 		$result = getJSONAllMembers($connectionObject);
@@ -184,6 +197,12 @@ if (isset($_GET['fct']))
             $result =  getJSONSelectedMembers($connectionObject, $_GET['nameFirst'], $_GET['nameLast']);
             echo $result;
 	}
+        
+        if ($_GET['fct'] == 'getJSONSelectedMemNames')
+        {
+            $result =  getJSONSelectedMemNames($connectionObject, $_GET['nameFirst'], $_GET['nameLast']);
+            echo $result;
+	}    
         
         if ($_GET['fct'] == 'getJSONMembersAndPastActivities')
 	{
