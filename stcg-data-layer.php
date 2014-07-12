@@ -144,6 +144,33 @@ function getJSONSelectedMembers($PDOdbObject, $first, $last)
     return $json;
 }
 
+//used for first step of assigning members to old events      
+function getJSONSelectedMemNames($PDOdbObject, $first, $last)
+{
+    try
+    {
+        $memberNamesSQL = "SELECT `id`, `name_first`, `name_last`, `email` FROM `member` WHERE `active` = 1 AND member.name_first LIKE :first AND member.name_last LIKE :last";
+        $getMatches = $PDOdbObject->prepare($memberNamesSQL);
+        
+        $first = $first."%";
+        $last = $last."%";
+        
+// Bind the parameter
+        $getMatches->bindParam(':first', $first, PDO::PARAM_STR);
+        $getMatches->bindParam(':last', $last, PDO::PARAM_STR);
+        
+        $getMatches->execute();
+        $rows = $getMatches->fetchAll();
+    }
+    catch (PDOException $e)
+    {
+        echo "There was a problem getting all member names with this search query.";
+        echo $e->getMessage();
+    }
+    $json=json_encode($rows);
+    return $json;
+}
+
 //USED ON SIGNUP WIZARD PAGE STCG-VOL1.PHP
 //USED ON DATABASE ADMIN PAGE ORGANIZE-LATEST-EVENT-ACTIVITES-MEMBERS.PHP
 function getLatestEvent($PDOdbObject)
@@ -795,12 +822,40 @@ function getJSONMembersAtActivity($PDOdbObject, $eventId, $actId)
 	//return $rows;
 }
 
-//USED ON SIGNUP WIZARD PAGE STCG-VOL6.PHP AND DO-ADD-EVENT-WITH JQWIDGET BOTH VIA JSON-RESPONSES
+// VIA JSON-RESPONSES
 function getJSONAllActivitiesAtEvent($PDOdbObject, $eventId)
 {
 	try
 	{
 		$thisEventActivitiesSQL = "SELECT * FROM activity WHERE `event_id`=?";
+		$get = $PDOdbObject->prepare($thisEventActivitiesSQL);
+		$get->execute(array($eventId));
+
+		$get->bindColumn('activity_id', $id);
+		$get->bindColumn('activity_name', $name);
+		$get->bindColumn('activity_desc', $desc);
+		$get->bindColumn('activity_short_code', $sc);
+		$get->bindColumn('event_id', $eventId);
+		$get->bindColumn('capacity', $cap);
+		$get->bindColumn('date', $date);
+
+		$rows = $get->fetchAll(PDO::FETCH_ASSOC);
+		$json=json_encode($rows);
+	}//end try
+	catch(PDOException $e)
+	{
+		echo "There was a problem getting Activities for this Event.";
+		echo $e->getMessage();
+	}
+	return $json;
+}
+
+// VIA JSON-RESPONSES
+function getJSONAllOpenActivitiesAtEvent($PDOdbObject, $eventId)
+{
+	try
+	{
+		$thisEventActivitiesSQL = "SELECT * FROM activity WHERE `event_id`=? AND `open` = 1";
 		$get = $PDOdbObject->prepare($thisEventActivitiesSQL);
 		$get->execute(array($eventId));
 
@@ -850,10 +905,11 @@ function getJSONAllSCsAtEvent($PDOdbObject, $eventId)
 {
 	try
 	{
-		$thisEventSCsSQL = "SELECT `activity_short_code`, `activity_id`, `capacity`, `project_leader`  FROM activity WHERE `event_id`= ?";
+		$thisEventSCsSQL = "SELECT `activity_short_code`, `activity_name`, `activity_id`, `capacity`, `project_leader`  FROM activity WHERE `event_id`= ?";
 		$get = $PDOdbObject->prepare($thisEventSCsSQL);
 		$get->execute(array($eventId));
 		$get->bindColumn('activity_short_code', $act_short_code);
+                $get->bindColumn('activity_name', $actName);
 		$get->bindColumn('activity_id', $actId);
 		$get->bindColumn('capacity', $capacity);
 		$get->bindColumn('project_leader', $project_leader);
