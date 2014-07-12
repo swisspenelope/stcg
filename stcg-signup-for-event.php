@@ -53,7 +53,7 @@ $(document).ready(function ()
             {name: 'open'}
         ],
         //url: 'stcg-json-responses.php?fct=getJSONAllActivitiesAtEvent&eventId=<?php echo $_SESSION['eventId'] ?>',
-        url: 'stcg-json-responses.php?fct=getJSONAllActivitiesAtEvent&eventId=' + thisEvent,
+        url: 'stcg-json-responses.php?fct=getJSONAllOpenActivitiesAtEvent&eventId=' + thisEvent,
         sortcolumn: 'activity_id',//note rowid order follows activity_id!
         sortdirection: 'asc',
         async: false
