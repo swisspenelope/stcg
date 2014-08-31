@@ -26,64 +26,7 @@ Volunteer email and password entry page
 
 ?>
 <!-- /***************************************************************************************/ -->
-<script type="text/javascript" charset="utf-8">
-$(document).ready(function ()
-{
-	$("#email").focus();
-
-	$("#back").click(function ()
-	{
-		$.ajax({
-		type: "GET",
-		url: "stcg-json-responses.php?fct=endSession",
-		//data: dataString,
-		success: function(response)
-		{
-			//alert("session destroyed on exit");
-			top.location.href="http://www.servethecitygeneva.ch";
-		}
-		});
-	});
-	$("#login").click(function ()
-	{
-		var isOK = true;
-		if(document.forms["RETMEM"].elements["email"].value == "" || !document.forms["RETMEM"].elements["valid_email"].checked)
-		  {
-			document.forms["RETMEM"].elements["email"].focus();
-			isOk = false;
-			return;
-		  }
-
-		  if(document.forms["RETMEM"].elements["pwd1"].value == "" || !document.forms["RETMEM"].elements["valid_pwd1"].checked)
-		  {
-			  document.forms["RETMEM"].elements["pwd1"].focus();
-			  isOk = false;
-			return;
-		  }
-
-		  location.replace("stcg-vol2-authenticated.php");
-	  });
-/*	if ($("#valid_email").is(':checked') && $("#valid_pwd1").is(':checked'))
-	{
-		document.getElementById("login").setAttribute("disabled", false);
-	}
-	else
-	{
-		document.getElementById("login").setAttribute("disabled", true);
-	}*/
-});
-
-function callAjax(method, value, target)
-{
-    if(encodeURIComponent)
-	{
-	    var req = new AjaxRequest();
-	    var params = "method=" + method + "&value=" + encodeURIComponent(value) + "&target=" + target;
-	    req.setMethod("POST");
-	    req.loadXMLDoc('stcg-ajax-validation.php', params);
-   }
-}
-</script>
+<script type="text/javascript" charset="utf-8" src="scripts/stcg-vol1.js" async></script>
 </head>
 <body>
 <?php
