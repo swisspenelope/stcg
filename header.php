@@ -15,6 +15,10 @@ session_start();
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
 <!--=== LINK TAGS ===-->
+<script src="scripts/jquery-ui-1.10.3/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script async src="scripts/ajaxrequest.js" type="text/javascript"  charset="utf-8"></script>
+<script async src="scripts/utils.js" type="text/javascript" charset="utf-8"></script>
+
 <link rel="shortcut icon" href="<?php echo DIR_BASE; ?>favicon.ico" /></link>
 
 <link rel="stylesheet" type="text/css" href="widgets/jqwidgets/jqwidgets/styles/jqx.base.css" /></link>
@@ -24,12 +28,10 @@ session_start();
 <link rel="stylesheet" type="text/css" href="css/form.css" /></link>
 <link rel="stylesheet" type="text/css" href="css/themes/blue/style.css" /></link>
 
-<script src="scripts/jquery-ui-1.10.3/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="scripts/ajaxrequest.js" type="text/javascript"  charset="utf-8"></script>
-<script src="scripts/utils.js" type="text/javascript" charset="utf-8"></script>
+
 
 <!-- ESSENTIAL JQWIDGETS LIBRARIES -->
-<script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqx-all.js"></script>
+<script async type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqx-all.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxcore.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxdata.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxgrid.js"></script>
@@ -39,6 +41,7 @@ session_start();
 <script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxlistbox.js"></script>
 
 <script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxgrid.selection.js"></script>
+<script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxgrid.filter.js"></script>
 <script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxgrid.sort.js"></script>
 
 <script type="text/javascript" src="widgets/jqwidgets/jqwidgets/jqxgrid.grouping.js"></script>
