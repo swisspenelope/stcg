@@ -13,15 +13,19 @@ else
 //print_r($memsWithInterest);
 ?>
 <!--/pre-->
-<HTML>
-<HEAD>
-<TITLE>List of Members by Language Preference</TITLE>
+<title>List of Members by Language Preference</title>
 <script type="text/javascript"> 
 $(document).ready(function () 
 {
 	$("#back").click(function () {
-        window.location="/stcg/signup/stcg-input-language-to-find-members.php";
+        window.location="stcg-input-language-to-find-members.php";
 	});
+	
+	$("#admin").click(function () 
+    {
+        window.location="stcg-admin-menu.php";
+    });
+	
 //SOURCE THE GRID CONTAINING ALL SIGNUPS:
     var data1 =
     {
@@ -62,13 +66,15 @@ $(document).ready(function ()
     	    });//end data source
 });    
 </script>
-</HEAD>
-<BODY>
-<H3>List of all Members with Language Pref: <?php echo langNumToText($lang); ?></H3>
-<fieldset style = "border: solid #AAAAAA 1px; width: 570px; padding: 20px; padding-top: 20px;">
-<DIV id = "jqxgrid1" style="FLOAT: LEFT;" ></DIV>	
+</head>
+<body>
+<h3>List of all Members with Language Pref: <?php echo langNumToText($lang); ?></h3>
+<fieldset style = "border: solid #aaaaaa 1px; width: 570px; padding: 20px; padding-top: 20px;">
+<div id = "jqxgrid1" style="float: left;" ></div>	
 </fieldset>
-<BR /><BR />
-<INPUT TYPE="BUTTON" ID="back" VALUE="Back"></INPUT>
-</BODY>
-</HTML>
+<br /><br />
+<input type="button" ID="back" value="Back"></input>
+<input type="button" ID="admin" value="Admin Menu"></input>
+<?php
+include_once 'footer.php';
+?>
