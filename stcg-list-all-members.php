@@ -8,7 +8,7 @@ $(document).ready(function ()
 {
     $("#admin").click(function () 
     {
-        window.location="/stcg/site/stcg-admin-menu.php";
+        window.location="stcg-admin-menu.php";
     });
 });
 </script>
