@@ -22,7 +22,7 @@ $(document).ready(function ()
 {
     $("#admin").click(function () 
     {
-        window.location="/stcg/site/stcg-admin-menu.php";
+        window.location="stcg-admin-menu.php";
     });
     
     var paramString = "&nameFirst=" + "<?php echo $_SESSION['first']?>" + "&nameLast=" + "<?php echo $_SESSION['last']?>";
@@ -92,7 +92,7 @@ $(document).ready(function ()
     {
 ///////DO NOT DELETE! IT'S THE ONLY COMBO THAT WORKS!!!/////////////
         var row = $("#jqxgrid1").jqxGrid('getrowdata', event.args.rowindex);
-    });    
+     });    
 });//end document ready
 
 </script>
