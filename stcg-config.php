@@ -21,7 +21,6 @@ define('HTML_CHARSET',  'utf8');
 
 define('ENV_DEV', 'localhost');
 define('ENV_PROD', 'servethecitygeneva.ch');
-//define('ENV_PROD', 'hacksrus.biz/stcg/signup');
 define('ADMIN', 'swisspenelope@gmail.com');
 define('SUB_ADMIN', 'gvannatter@aol.com');
 
@@ -47,10 +46,10 @@ else
     define('DB_PWD',       '1f1te111');
     define('DB_NAME',      'servethecitygenevach1');
 
-    define('SESSION_DOMAIN','www.servethecitygeneva.ch/stcg/site');
+    define('SESSION_DOMAIN','www.servethecitygeneva.ch/volunteer-signup');
     define('SESSION_PATH','/');
 
-    define('EMAIL_ORG', 'swisspenelope@gmail.com');
+    define('EMAIL_ORG', 'swisspenelope@gmail.com' . ', gvannatter@aol.com');
 }
 
 //Logs
